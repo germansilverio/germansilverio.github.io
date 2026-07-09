@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Germán Silverio | Portfolio</title>
     <meta name="description"
-        content="Portfolio de Germán Silverio - Analista Financiero y Contable en transición a Tech">
+        content="Portfolio de Germán Silverio - Analista Contable especializado en automatización, datos e IA">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,54 +27,63 @@
     <nav class="navbar">
         <div class="container">
             <a href="#" class="logo">Germán<span class="dot">.</span></a>
-            <ul class="nav-links">
-                <li><a href="#about">Sobre Mí</a></li>
-                <li><a href="#experience">Experiencia</a></li>
-                <li><a href="#projects">Proyectos</a></li>
-                <li><a href="#contact">Contacto</a></li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#about" data-i18n="nav.about">Sobre Mí</a></li>
+                    <li><a href="#experience" data-i18n="nav.experience">Experiencia</a></li>
+                    <li><a href="#projects" data-i18n="nav.projects">Proyectos</a></li>
+                    <li><a href="#contact" data-i18n="nav.contact">Contacto</a></li>
+                </ul>
+                <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+                    <button id="lang-es" class="active">ES</button>
+                    <button id="lang-en">EN</button>
+                </div>
+            </div>
         </div>
     </nav>
 
     <header class="hero">
         <div class="container hero-content">
-            <span class="badge">Analista Financiero & Tech Enthusiast</span>
+            <span class="badge" data-i18n="hero.badge">Analista Contable y Financiero · R2R · Activos Fijos</span>
             <h1>Germán Silverio</h1>
-            <h2 class="hero-subtitle-large">De los Estados Contables a la <span class="gradient-text">Automatización
-                    Inteligente</span></h2>
-            <p class="hero-subtitle">
-                Analista Financiero y Contable con más de 8 años de experiencia optimizando procesos.
-                Ahora aplicando mi expertise en <strong>Automatización, Análisis de Datos y Desarrollo con IA</strong>
-                para crear soluciones que transforman negocios.
+            <h2 class="hero-subtitle-large" data-i18n="hero.headline">De los estados contables a la <span
+                    class="gradient-text">automatización inteligente</span></h2>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">
+                Analista contable y financiero con 15 años de experiencia, los últimos 9 en multinacionales del sector
+                energético. Cierres contables, activos fijos y reporting bajo <strong>IFRS/USGAAP</strong>, con un
+                diferencial: automatizo lo repetitivo con <strong>Excel, Power Query y Apps Script</strong> para
+                dedicar el tiempo a analizar, no a copiar y pegar.
             </p>
             <div class="hero-buttons">
-                <a href="#projects" class="btn btn-primary">Ver Portfolio</a>
-                <a href="#contact" class="btn btn-secondary">Contactar</a>
+                <a href="#projects" class="btn btn-primary" data-i18n="hero.cta1">Ver Proyectos</a>
+                <a href="#contact" class="btn btn-secondary" data-i18n="hero.cta2">Contactar</a>
             </div>
         </div>
     </header>
 
     <section id="about" class="section about-section">
         <div class="container">
-            <h2 class="section-title">Perfil Profesional</h2>
+            <h2 class="section-title" data-i18n="about.title">Perfil Profesional</h2>
             <div class="about-grid">
                 <div class="about-card">
                     <i class="fa-solid fa-chart-line icon"></i>
-                    <h3>Análisis Financiero</h3>
-                    <p>Experto en Activos Fijos, Planeamiento y Control (OPEX/CAPEX). Manejo avanzado de SAP y normas
-                        IFRS/USGAAP.</p>
+                    <h3 data-i18n="about.card1.title">Contabilidad & Finanzas</h3>
+                    <p data-i18n="about.card1.text">Cierres mensuales integrales, activos fijos, conciliaciones y
+                        planeamiento (OPEX/CAPEX) en multinacionales de energía. SAP avanzado y reporting bajo IFRS,
+                        USGAAP y GAAP local.</p>
                 </div>
                 <div class="about-card">
                     <i class="fa-solid fa-robot icon"></i>
-                    <h3>Automatización</h3>
-                    <p>Reducción del 50% en tiempos de verificación mediante automatización en Excel y Power BI. Pasión
-                        por optimizar flujos de trabajo.</p>
+                    <h3 data-i18n="about.card2.title">Automatización</h3>
+                    <p data-i18n="about.card2.text">Construí una herramienta en Excel para verificar el RECPAM sobre
+                        activos fijos que redujo un 50% los tiempos y las consultas de auditoría. Power Query para
+                        convertir reportes manuales en flujos que se actualizan solos.</p>
                 </div>
                 <div class="about-card">
                     <i class="fa-solid fa-code icon"></i>
-                    <h3>Tech & IA</h3>
-                    <p>Explorando el desarrollo de aplicaciones "Local-First" y la integración de APIs de Inteligencia
-                        Artificial (Gemini) para soluciones financieras.</p>
+                    <h3 data-i18n="about.card3.title">Datos & IA</h3>
+                    <p data-i18n="about.card3.text">Desarrollo tableros y aplicaciones con Google Apps Script y APIs
+                        de IA (Gemini), con arquitecturas "local-first" que priorizan la privacidad de los datos.</p>
                 </div>
             </div>
         </div>
@@ -82,33 +91,58 @@
 
     <section id="experience" class="section experience-section">
         <div class="container">
-            <h2 class="section-title">Trayectoria</h2>
+            <h2 class="section-title" data-i18n="exp.title">Trayectoria</h2>
             <div class="timeline">
                 <div class="timeline-item">
-                    <div class="timeline-date">2023 - Presente</div>
+                    <div class="timeline-date" data-i18n="exp.job1.date">Abr 2026 - Presente</div>
                     <div class="timeline-content">
-                        <h3>Fixed Assets Analyst</h3>
+                        <h3 data-i18n="exp.job1.role">Analista Semisenior, Record-to-Report (R2R)</h3>
                         <h4>AES Servicios América S.A.</h4>
-                        <p>Desarrollo de automatizaciones en Excel para comprobación de RECPAM (reducción 50% tiempo).
-                            Cierre contable, reporting IFRS/USGAAP y análisis de variaciones.</p>
+                        <p data-i18n="exp.job1.text">Cierre mensual integral para las entidades de AES Colombia.
+                            Conciliación de préstamos bancarios y anticipos de clientes de energía, registraciones en
+                            el mayor y reporting ad hoc, con soporte a controles internos y auditorías externas.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-date">2021 - 2023</div>
+                    <div class="timeline-date" data-i18n="exp.job2.date">Sep 2023 - Mar 2026</div>
                     <div class="timeline-content">
-                        <h3>Analista de Planeamiento y Control</h3>
-                        <h4>Edelap S.A.</h4>
-                        <p>Reporting y seguimiento de OPEX, análisis de desvíos, preparación de presupuestos y
-                            seguimiento de obras.</p>
+                        <h3 data-i18n="exp.job2.role">Analista de Activos Fijos</h3>
+                        <h4>AES Servicios América S.A.</h4>
+                        <p data-i18n="exp.job2.text">Desarrollé una herramienta en Excel para verificar el RECPAM
+                            sobre bienes de uso que redujo un 50% los tiempos y las consultas de auditoría. Notas de
+                            activos fijos bajo GAAP local, IFRS y USGAAP; cierres, análisis de variaciones e
+                            integridad de datos en el módulo SAP FA.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-date">2017 - 2021</div>
+                    <div class="timeline-date" data-i18n="exp.job3.date">Oct 2021 - Sep 2023</div>
                     <div class="timeline-content">
-                        <h3>Analista de Contabilidad</h3>
+                        <h3 data-i18n="exp.job3.role">Analista de Planeamiento y Control</h3>
                         <h4>Edelap S.A.</h4>
-                        <p>Participación clave en migración a SAP. Automatización del ajuste por inflación. Informes
-                            gerenciales y balances NIIF.</p>
+                        <p data-i18n="exp.job3.text">Reporting de OPEX, análisis de desvíos y preparación del
+                            presupuesto de gastos. Seguimiento de obras de capital y créditos gubernamentales, con
+                            soporte a provisiones mensuales y auditorías externas.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date" data-i18n="exp.job4.date">Abr 2017 - Oct 2021</div>
+                    <div class="timeline-content">
+                        <h3 data-i18n="exp.job4.role">Analista Contable</h3>
+                        <h4>Edelap S.A.</h4>
+                        <p data-i18n="exp.job4.text">Lideré el módulo de Activos Fijos en la migración a SAP,
+                            incluida la migración completa de datos. Co-lideré junto a consultores de Accenture la
+                            implementación 2018 del ajuste por inflación de bienes de uso en SAP, automatizando su
+                            cálculo y ejecución. Estados contables IFRS y reporting gerencial.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date" data-i18n="exp.job5.date">Jul 2011 - Mar 2017</div>
+                    <div class="timeline-content">
+                        <h3 data-i18n="exp.job5.role">Analista Contable</h3>
+                        <h4>Federación Bioquímica de la Pcia. de Buenos Aires (FABA)</h4>
+                        <p data-i18n="exp.job5.text">Conciliación diaria de cobranzas de ~200 obras sociales, con un
+                            promedio de 20 conciliaciones de alto volumen por día. Registraciones, facturación y
+                            rotación por tesorería: emisión de cheques, pagos e inversiones diarias.</p>
                     </div>
                 </div>
             </div>
@@ -117,70 +151,127 @@
 
     <section id="projects" class="section projects-section">
         <div class="container">
-            <h2 class="section-title">Proyectos Destacados</h2>
-            <div class="project-card featured-project">
-                <div class="project-image">
-                    <img src="assets/images/finance-main.png" alt="Smart Finance App Dashboard">
-                </div>
-                <div class="project-info">
-                    <span class="project-tag">AI Powered PWA</span>
-                    <h3>Smart Finance: Gestión con IA</h3>
-                    <p>Una Progressive Web App (PWA) "Local-First" que revoluciona el control de gastos. Integra la API
-                        de <strong>Google Gemini</strong> para escanear tickets automáticamente y ofrecer asesoramiento
-                        financiero personalizado.</p>
+            <h2 class="section-title" data-i18n="proj.title">Proyectos Destacados</h2>
+            <div class="projects-grid">
 
-                    <div class="features-list">
-                        <ul>
-                            <li><i class="fa-solid fa-check"></i> Escaneo de tickets con Visión Artificial (IA)</li>
-                            <li><i class="fa-solid fa-check"></i> Asesor Financiero inteligente (Chatbot)</li>
-                            <li><i class="fa-solid fa-check"></i> 100% Privada (Datos en LocalStorage)</li>
+                <div class="project-card featured-project">
+                    <div class="project-image">
+                        <img src="assets/images/finance-main.png" alt="Smart Finance App Dashboard" id="main-img-1">
+                    </div>
+                    <div class="project-info">
+                        <span class="project-tag" data-i18n="proj.p1.tag">PWA con IA</span>
+                        <h3 data-i18n="proj.p1.title">Smart Finance: Gestión con IA</h3>
+                        <p data-i18n="proj.p1.text">Una Progressive Web App (PWA) "local-first" para el control de
+                            gastos personales. Integra la API de Google Gemini para escanear tickets automáticamente y
+                            ofrecer asesoramiento financiero personalizado, sin servidores intermedios.</p>
+
+                        <div class="features-list">
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i><span data-i18n="proj.p1.f1">Escaneo de tickets
+                                        con visión artificial (IA)</span></li>
+                                <li><i class="fa-solid fa-check"></i><span data-i18n="proj.p1.f2">Asesor financiero
+                                        inteligente (chatbot)</span></li>
+                                <li><i class="fa-solid fa-check"></i><span data-i18n="proj.p1.f3">100% privada: los
+                                        datos nunca salen del dispositivo</span></li>
+                            </ul>
+                        </div>
+
+                        <ul class="tech-stack">
+                            <li>JavaScript</li>
+                            <li>Gemini API</li>
+                            <li>Chart.js</li>
+                            <li>PWA</li>
                         </ul>
-                    </div>
 
-                    <ul class="tech-stack">
-                        <li>JavaScript</li>
-                        <li>Gemini API</li>
-                        <li>Chart.js</li>
-                        <li>PWA</li>
-                    </ul>
+                        <div class="project-gallery" data-target="main-img-1">
+                            <img src="assets/images/finance-main.png" alt="Principal">
+                            <img src="assets/images/finance-dashboard.png" alt="Dashboard">
+                            <img src="assets/images/finance-registro.png" alt="Registro">
+                            <img src="assets/images/finance-budget.png" alt="Presupuestos">
+                            <img src="assets/images/finance-projection.png" alt="Proyección">
+                            <img src="assets/images/finance-chart.png" alt="Gráficos">
+                        </div>
 
-                    <div class="project-gallery">
-                        <img src="assets/images/finance-main.png" alt="Principal">
-                        <img src="assets/images/finance-dashboard.png" alt="Dashboard">
-                        <img src="assets/images/finance-budget.png" alt="Presupuestos">
-                        <img src="assets/images/finance-projection.png" alt="Proyección">
-                        <img src="assets/images/finance-chart.png" alt="Gráficos">
-                    </div>
-
-                    <div class="project-links">
-                        <a href="demo/index.html" target="_blank" class="btn btn-primary">Ver Demo
-                            Interactiva</a>
+                        <div class="project-links">
+                            <a href="demo/index.html" target="_blank" class="btn btn-primary"
+                                data-i18n="proj.p1.cta">Ver Demo Interactiva</a>
+                        </div>
                     </div>
                 </div>
+
+                <div class="project-card featured-project">
+                    <div class="project-image">
+                        <img src="assets/images/cashflow-tablero.png" alt="Tablero de Control Financiero"
+                            id="main-img-2">
+                    </div>
+                    <div class="project-info">
+                        <span class="project-tag" data-i18n="proj.p2.tag">Automatización</span>
+                        <h3 data-i18n="proj.p2.title">Flujo de Fondos: Tablero Automatizado</h3>
+                        <p data-i18n="proj.p2.text">Sistema de gestión de flujo de fondos personal construido sobre
+                            Google Sheets, con un modelo de proyección multianual y una web app de solo lectura
+                            (HtmlService) servida desde Apps Script. El tablero se recalcula solo: sin carga manual ni
+                            mantenimiento.</p>
+
+                        <div class="features-list">
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i><span data-i18n="proj.p2.f1">Escenarios
+                                        Optimista / Base / Pesimista con recálculo automático</span></li>
+                                <li><i class="fa-solid fa-check"></i><span data-i18n="proj.p2.f2">Estado de liquidez
+                                        mes a mes y margen de cobertura proyectado</span></li>
+                                <li><i class="fa-solid fa-check"></i><span data-i18n="proj.p2.f3">Simulador de
+                                        cartera en USD (bonos, CEDEARs, money market)</span></li>
+                            </ul>
+                        </div>
+
+                        <ul class="tech-stack">
+                            <li>Google Sheets</li>
+                            <li>Apps Script</li>
+                            <li>HtmlService</li>
+                            <li>Chart.js</li>
+                        </ul>
+
+                        <div class="project-gallery" data-target="main-img-2">
+                            <img src="assets/images/cashflow-tablero.png" alt="Tablero de control">
+                            <img src="assets/images/cashflow-app-movil-1.png" alt="Web app móvil (1)">
+                            <img src="assets/images/cashflow-app-movil-2.png" alt="Web app móvil (2)">
+                            <img src="assets/images/cashflow-flujo.png" alt="Flujo de fondos">
+                            <img src="assets/images/cashflow-inversiones.png" alt="Simulador de cartera USD">
+                            <img src="assets/images/cashflow-appsscript.png" alt="Código Apps Script">
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 
     <section id="skills" class="section skills-section">
         <div class="container">
-            <h2 class="section-title">Habilidades y Herramientas</h2>
+            <h2 class="section-title" data-i18n="skills.title">Habilidades y Herramientas</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>Tecnología</h3>
+                    <h3 data-i18n="skills.tech">Tecnología</h3>
                     <div class="skill-tags">
                         <span>SAP (GL, AA, PS, MM, FI)</span>
+                        <span>Microsoft Excel <span data-i18n="skills.advanced">(Avanzado)</span></span>
+                        <span>Power Query</span>
                         <span>Power BI</span>
-                        <span>Microsoft Excel (Avanzado)</span>
+                        <span>Google Apps Script</span>
                         <span>HTML/CSS/JS</span>
-                        <span>AI APIs</span>
+                        <span data-i18n="skills.ai">APIs de IA</span>
                     </div>
                 </div>
                 <div class="skill-category">
-                    <h3>Idiomas & Otros</h3>
+                    <h3 data-i18n="skills.other">Formación & Otros</h3>
                     <div class="skill-tags">
-                        <span><i class="fa-solid fa-earth-americas"></i> Inglés C2 (Proficient)</span>
-                        <span><i class="fa-solid fa-calculator"></i> Contabilidad</span>
-                        <span><i class="fa-solid fa-chart-pie"></i> Análisis de Datos</span>
+                        <span><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="skills.degree">Contador
+                                Público, UNLP (en curso, 83%)</span></span>
+                        <span><i class="fa-solid fa-earth-americas"></i> <span data-i18n="skills.english">Inglés C2
+                                (EF SET Certified)</span></span>
+                        <span><i class="fa-solid fa-calculator"></i> <span
+                                data-i18n="skills.accounting">IFRS / USGAAP / R2R</span></span>
+                        <span><i class="fa-solid fa-chart-pie"></i> <span data-i18n="skills.data">Análisis de
+                                Datos</span></span>
                     </div>
                 </div>
             </div>
@@ -189,8 +280,9 @@
 
     <section id="contact" class="section contact-section">
         <div class="container">
-            <h2 class="section-title">Conectemos</h2>
-            <p>Estoy buscando nuevos desafíos donde pueda aportar mi visión analítica y tecnológica.</p>
+            <h2 class="section-title" data-i18n="contact.title">Conectemos</h2>
+            <p data-i18n="contact.text">Estoy buscando nuevos desafíos donde pueda aportar mi visión analítica y
+                tecnológica.</p>
 
             <div class="contact-cards">
                 <a href="mailto:germansilverio91@gmail.com" class="contact-card">
@@ -211,14 +303,16 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Germán Silverio. Creado con IA y Pasión.</p>
+            <p data-i18n="footer.text">&copy; 2026 Germán Silverio. Creado con IA y pasión.</p>
         </div>
     </footer>
 
     <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox">
         <span class="close-lightbox">&times;</span>
-        <img class="lightbox-content" id="lightbox-img">
+        <button class="lightbox-nav lightbox-prev" aria-label="Anterior">&#10094;</button>
+        <img class="lightbox-content" id="lightbox-img" alt="Vista ampliada">
+        <button class="lightbox-nav lightbox-next" aria-label="Siguiente">&#10095;</button>
     </div>
 
     <script src="js/main.js"></script>
