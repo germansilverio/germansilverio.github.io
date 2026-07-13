@@ -8,7 +8,7 @@ const translations = {
 
         "hero.badge": "Analista Contable y Financiero · R2R · Activos Fijos",
         "hero.headline": 'De los estados contables a la <span class="gradient-text">automatización inteligente</span>',
-        "hero.subtitle": "15 años en finanzas, hoy en la intersección entre <strong>contabilidad, datos e IA</strong>. Cierres contables, activos fijos y reporting bajo IFRS/USGAAP en multinacionales de energía. Me interesan los problemas donde un proceso manual necesita ser repensado — y el <strong>desarrollo asistido por IA</strong> me permite construir soluciones que antes estaban fuera del alcance de un perfil contable.",
+        "hero.subtitle": "15 años en finanzas, hoy en la intersección entre <strong>contabilidad, datos e&nbsp;IA</strong>. Cierres contables, activos fijos y reporting bajo IFRS/USGAAP en multinacionales de energía. Me interesan los problemas donde un proceso manual necesita ser repensado — y el <strong>desarrollo asistido por&nbsp;IA</strong> me permite construir soluciones que antes estaban fuera del alcance de un perfil contable.",
         "hero.cta1": "Ver Proyectos",
         "hero.cta2": "Contactar",
 
@@ -79,7 +79,7 @@ const translations = {
 
         "hero.badge": "Financial & Accounting Analyst · R2R · Fixed Assets",
         "hero.headline": 'From financial statements to <span class="gradient-text">intelligent automation</span>',
-        "hero.subtitle": "15 years in finance, now working at the intersection of <strong>accounting, data and AI</strong>. Month-end closings, fixed assets and IFRS/USGAAP reporting at multinational energy companies. I'm drawn to problems where a manual process needs to be rethought — and <strong>AI-assisted development</strong> lets me build solutions that used to be out of reach for an accounting profile.",
+        "hero.subtitle": "15 years in finance, now working at the intersection of <strong>accounting, data and&nbsp;AI</strong>. Month-end closings, fixed assets and IFRS/USGAAP reporting at multinational energy companies. I'm drawn to problems where a manual process needs to be rethought — and <strong>AI-assisted development</strong> lets me build solutions that used to be out of reach for an accounting profile.",
         "hero.cta1": "View Projects",
         "hero.cta2": "Get in Touch",
 
