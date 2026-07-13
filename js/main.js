@@ -8,7 +8,7 @@ const translations = {
 
         "hero.badge": "Analista Contable y Financiero · R2R · Activos Fijos",
         "hero.headline": 'De los estados contables a la <span class="gradient-text">automatización inteligente</span>',
-        "hero.subtitle": "Analista contable y financiero con 15 años de experiencia, los últimos 9 en multinacionales del sector energético. Cierres contables, activos fijos y reporting bajo <strong>IFRS/USGAAP</strong>, con un diferencial: automatizo lo repetitivo con <strong>Excel, Power Query y Apps Script</strong> para dedicar el tiempo a analizar, no a copiar y pegar.",
+        "hero.subtitle": "15 años en finanzas, hoy en la intersección entre <strong>contabilidad, datos e IA</strong>. Cierres contables, activos fijos y reporting bajo IFRS/USGAAP en multinacionales de energía. Me interesan los problemas donde un proceso manual necesita ser repensado — y el <strong>desarrollo asistido por IA</strong> me permite construir soluciones que antes estaban fuera del alcance de un perfil contable.",
         "hero.cta1": "Ver Proyectos",
         "hero.cta2": "Contactar",
 
@@ -55,6 +55,7 @@ const translations = {
         "skills.title": "Habilidades y Herramientas",
         "skills.tech": "Tecnología",
         "skills.advanced": "(Avanzado)",
+        "skills.vibecoding": "Desarrollo asistido por IA (vibe coding)",
         "skills.ai": "APIs de IA",
         "skills.other": "Formación & Otros",
         "skills.degree": "Contador Público, UNLP (en curso, 83%)",
@@ -78,7 +79,7 @@ const translations = {
 
         "hero.badge": "Financial & Accounting Analyst · R2R · Fixed Assets",
         "hero.headline": 'From financial statements to <span class="gradient-text">intelligent automation</span>',
-        "hero.subtitle": "Financial and accounting analyst with 15 years of experience, the last 9 at multinational energy companies. Month-end closings, fixed assets and <strong>IFRS/USGAAP</strong> reporting, with a differentiator: I automate repetitive work with <strong>Excel, Power Query and Apps Script</strong> to spend time analyzing, not copy-pasting.",
+        "hero.subtitle": "15 years in finance, now working at the intersection of <strong>accounting, data and AI</strong>. Month-end closings, fixed assets and IFRS/USGAAP reporting at multinational energy companies. I'm drawn to problems where a manual process needs to be rethought — and <strong>AI-assisted development</strong> lets me build solutions that used to be out of reach for an accounting profile.",
         "hero.cta1": "View Projects",
         "hero.cta2": "Get in Touch",
 
@@ -125,6 +126,7 @@ const translations = {
         "skills.title": "Skills & Tools",
         "skills.tech": "Technology",
         "skills.advanced": "(Advanced)",
+        "skills.vibecoding": "AI-assisted development (vibe coding)",
         "skills.ai": "AI APIs",
         "skills.other": "Education & Other",
         "skills.degree": "Public Accountant, UNLP (in progress, 83%)",
