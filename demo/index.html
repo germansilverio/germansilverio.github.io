@@ -1029,7 +1029,7 @@
                 div.innerHTML = `
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-medium text-gray-700">${cat}</span>
-                            <input type="number" value="${limit}" placeholder="Límite" 
+                            <input type="number" value="${limit}" placeholder="Límite"
                                 class="input-field w-24 p-1 text-right text-sm rounded border border-gray-200"
                                 onchange="UI.updateBudget('${cat}', this.value)">
                         </div>
@@ -1295,8 +1295,8 @@
             if (!apiKey) return this.simulatedReply(msg);
 
             try {
-                const prompt = `Eres un asesor financiero experto. El usuario te pregunta: "${msg}". 
-                    Contexto financiero actual del usuario: 
+                const prompt = `Eres un asesor financiero experto. El usuario te pregunta: "${msg}".
+                    Contexto financiero actual del usuario:
                     - Ingresos Mes: ${context.ing}
                     - Gastos Mes: ${context.gas}
                     - Saldo Total: ${context.bal}

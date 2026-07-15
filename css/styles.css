@@ -1,17 +1,17 @@
 :root {
-    --bg-color: #0b1220;
-    --bg-soft: #111a2e;
-    --text-color: #e6edf5;
-    --text-muted: #8fa3b8;
-    --primary-color: #2dd4bf;
-    --secondary-color: #34d399;
-    --accent-color: #38bdf8;
-    --primary-glow: rgba(45, 212, 191, 0.15);
-    --secondary-glow: rgba(52, 211, 153, 0.15);
-    --card-bg: rgba(17, 26, 46, 0.75);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --bg-color: #1C1510;
+    --bg-soft: #262019;
+    --text-color: #F2E7D5;
+    --text-muted: #A89680;
+    --primary-color: #D99A36;
+    --secondary-color: #C96F42;
+    --accent-color: #9BAA6A;
+    --primary-glow: rgba(217, 154, 54, 0.12);
+    --secondary-glow: rgba(201, 111, 66, 0.10);
+    --card-bg: rgba(44, 34, 24, 0.75);
+    --card-border: rgba(242, 231, 213, 0.08);
+    --font-heading: 'Bricolage Grotesque', sans-serif;
+    --font-body: 'Nunito Sans', sans-serif;
 }
 
 * {
@@ -39,7 +39,7 @@ body {
     background:
         radial-gradient(circle at 15% 50%, var(--primary-glow), transparent 30%),
         radial-gradient(circle at 85% 20%, var(--secondary-glow), transparent 30%),
-        radial-gradient(circle at 60% 90%, rgba(56, 189, 248, 0.08), transparent 30%);
+        radial-gradient(circle at 60% 90%, rgba(155, 170, 106, 0.07), transparent 30%);
     z-index: -1;
     pointer-events: none;
 }
@@ -82,7 +82,7 @@ h2 {
     top: 0;
     z-index: 100;
     backdrop-filter: blur(12px);
-    background: rgba(11, 18, 32, 0.7);
+    background: rgba(28, 21, 16, 0.7);
     border-bottom: 1px solid var(--card-border);
 }
 
@@ -150,7 +150,7 @@ h2 {
 
 .lang-toggle button.active {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: #06251f;
+    color: #211912;
 }
 
 /* Hero */
@@ -174,7 +174,7 @@ h2 {
     font-size: 0.875rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(45, 212, 191, 0.25);
+    border: 1px solid rgba(217, 154, 54, 0.25);
 }
 
 .hero-subtitle-large {
@@ -208,14 +208,14 @@ h2 {
 
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: #06251f;
+    color: #211912;
     border: none;
-    box-shadow: 0 4px 18px rgba(45, 212, 191, 0.3);
+    box-shadow: 0 4px 18px rgba(217, 154, 54, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(45, 212, 191, 0.45);
+    box-shadow: 0 8px 28px rgba(217, 154, 54, 0.45);
 }
 
 .btn-secondary {
@@ -257,7 +257,7 @@ h2 {
 
 .about-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(45, 212, 191, 0.4);
+    border-color: rgba(217, 154, 54, 0.4);
 }
 
 .about-card .icon {
@@ -646,7 +646,7 @@ h2 {
 }
 
 .lightbox-nav:hover {
-    background: rgba(45, 212, 191, 0.25);
+    background: rgba(217, 154, 54, 0.25);
     border-color: var(--primary-color);
 }
 
