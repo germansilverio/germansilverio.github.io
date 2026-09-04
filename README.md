@@ -1,32 +1,38 @@
 # Portfolio de Germán Silverio
 
-Sitio estático, sin build ni dependencias de instalación. Se abre haciendo doble clic en `index.html`.
+Sitio estático, sin build. Se abre haciendo doble clic en `index.html`.
 
-## Estructura
+## Archivos
 
-- `index.html` — la página completa. Todo el texto visible lleva un atributo `data-i18n`.
-- `js/main.js` — diccionarios ES/EN, cambio de idioma, animaciones de scroll, galerías y lightbox.
-- `css/styles.css` — estilos. El bloque final ("Añadidos 2026-09") tiene la narrativa, los estados de proyecto y los leads de sección.
-- `assets/images/` — capturas. Prefijos: `crm-*`, `web-*`, `coffee-*`, `cashflow-*`, `finance-*`.
-- `demo/` — demo interactiva de Smart Finance, enlazada desde la tarjeta del proyecto.
+- `index.html` — la página entera. Todo el texto visible lleva `data-i18n`.
+- `js/main.js` — diccionarios ES/EN, cambio de idioma, miniaturas y lightbox.
+- `css/styles.css` — estilos. Paleta y tipografías en el bloque `:root` de arriba.
+- `assets/images/` — capturas: `crm-*`, `web-*`, `coffee-*`, `cashflow-*`, `finance-*`.
+- `demo/` — demo de Smart Finance, enlazada desde su tarjeta.
 
-## Cómo se edita el texto
+## Editar texto
 
-Cada texto vive en **dos lugares** y hay que tocar los dos:
+Cada texto vive en dos lugares y hay que tocar los dos:
 
-1. En `index.html`, dentro del elemento con `data-i18n="clave"` (es lo que se ve si el JS no corre).
-2. En `js/main.js`, en `translations.es["clave"]` y `translations.en["clave"]`.
+1. `index.html`, dentro del elemento con `data-i18n="clave"` (es el fallback si el JS no corre).
+2. `js/main.js`, en `translations.es["clave"]` **y** en `translations.en["clave"]`.
 
-Si agregás una clave nueva, ponela en los tres lados. Si una clave falta en un idioma, ese elemento se queda con el texto del idioma anterior — no rompe, pero se nota.
+Si falta una clave en un idioma, ese elemento queda con el texto del idioma anterior. Son 84 claves y las dos listas tienen que coincidir.
 
-## Capturas
+## Diseño
 
-- Las de `crm-*` y `cashflow-*` salen de las vistas de demostración, con datos inventados. Nunca poner capturas con datos reales de un cliente.
-- Para regenerar las del CRM: `python3 dev/generar-demo.py` en la carpeta del CRM y sacar las pantallas de `demo.html`.
-- Las de `web-*` salen del sitio de Lacalle; las de `coffee-*`, de `Workana/01-CoffeeHouse/img`.
+- Fondo `#0B0B0C`, superficies `#131316`, un solo acento ámbar `#E8B33C`.
+- Verde `--live` y naranja `--dev` son semánticos (estado de un proyecto), no decorativos: no usarlos para otra cosa.
+- Tipografías: Archivo (títulos), Instrument Sans (texto), JetBrains Mono (etiquetas y números).
+- Regla de escritura: viñetas de menos de doce palabras, párrafos de dos o tres líneas. Si un bloque necesita más, es que sobra.
 
-## Pendientes
+## Publicar
 
-- Publicarlo. Hoy corre local; sin URL, el portfolio no cumple su función. GitHub Pages o Netlify, cualquiera de los dos sirve y es gratis.
-- Foto propia en la portada.
-- Un número concreto del CRM (horas ahorradas, propiedades cargadas) — es lo único que le falta al caso más fuerte.
+El repo de GitHub Pages está fuera de esta carpeta. Al actualizar hay que copiar **los tres**: `index.html`, `js/main.js` y `css/styles.css`. Si subís uno solo, el JS viejo sobrescribe el texto del HTML nuevo y quedan tarjetas con contenido de otros proyectos.
+
+Después de subir: Ctrl+Shift+R para saltear la caché del navegador.
+
+## Pendiente
+
+- Un número más del CRM (propiedades cargadas, contactos gestionados).
+- Foto propia, si alguna vez querés una.
