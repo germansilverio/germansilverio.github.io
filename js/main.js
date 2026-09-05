@@ -10,7 +10,6 @@ const translations = {
         "hero.lead": "Construyo las herramientas con las que trabajo. Quince años de cierres, activos fijos y SAP en multinacionales de energía — y software propio que corre todos los días.",
         "hero.cta1": "Ver proyectos",
         "hero.cta2": 'Escribime <span aria-hidden="true">→</span>',
-        "hero.cap": "CRM Lacalle · en uso desde 2026",
 
         "stat.1": "años en finanzas",
         "stat.2": "productos propios en uso",
@@ -114,7 +113,6 @@ const translations = {
         "hero.lead": "I build the tools I work with. Fifteen years of month-end closings, fixed assets and SAP at multinational energy companies — plus my own software running every day.",
         "hero.cta1": "See the work",
         "hero.cta2": 'Write to me <span aria-hidden="true">→</span>',
-        "hero.cap": "CRM Lacalle · in use since 2026",
 
         "stat.1": "years in finance",
         "stat.2": "own products in use",
@@ -274,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const close = () => { lb.hidden = true; };
     const step = d => { if (set.length > 1) { idx = (idx + d + set.length) % set.length; paint(); } };
 
-    document.querySelectorAll('.shot img, .hero-shot img').forEach(img => {
+    document.querySelectorAll('.shot img').forEach(img => {
         img.addEventListener('click', () => {
             const card = img.closest('.card');
             const thumbs = card ? [...card.querySelectorAll('.thumbs img')] : [];
