@@ -258,6 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 main.alt = t.alt;
                 g.querySelectorAll('img').forEach(o => o.classList.remove('on'));
                 t.classList.add('on');
+                // En pantallas chicas la imagen principal queda fuera de vista al
+                // tocar una miniatura: abrimos el visor grande directamente.
+                if (window.matchMedia('(max-width: 760px)').matches) {
+                    const imgs = [...g.querySelectorAll('img')];
+                    open(imgs, Math.max(0, imgs.indexOf(t)));
+                }
             });
         });
     });

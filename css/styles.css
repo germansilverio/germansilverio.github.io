@@ -865,6 +865,28 @@ p {
     .when {
         padding-top: 0;
     }
+
+    /* Visor: en el celular se abre al tocar una miniatura, así que
+       gana pantalla y botones más grandes para el pulgar. */
+    .lb {
+        padding: 16px;
+    }
+
+    .lb img {
+        max-width: 94vw;
+        max-height: 80vh;
+    }
+
+    .lb button {
+        font-size: 44px;
+        padding: 14px 16px;
+    }
+
+    .lb-x {
+        top: 2px;
+        right: 6px;
+        font-size: 38px;
+    }
 }
 
 
