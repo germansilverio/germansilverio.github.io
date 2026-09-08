@@ -21,15 +21,19 @@ const translations = {
 
         "p1.state": "En desarrollo · en uso",
         "p1.kind": "Cliente real",
+        "p1.date": "Agosto 2026",
         "p1.title": "CRM Lacalle Servicios Inmobiliarios",
         "p1.sub": "Sistema de gestión completo para una martillera que se lanzó por su cuenta. Del cero a producción, con el sitio web, en menos de diez días.",
         "p1.b1": "Contactos, propiedades, pipeline, agenda, métricas, fotos y mails con firma",
         "p1.b2": "Redacción de avisos asistida por IA (Gemini)",
         "p1.b3": "Descarté Postgres: cero cuentas nuevas para ella, respaldo por historial de Drive",
         "p1.b4": "4 suites de tests, releases fechadas con vuelta atrás, dos manuales",
+        "p1.b5": "Placas para Instagram desde la ficha, difusión por mail y calendario de fechas para postear",
+        "p1.b6": "Consultas por propiedad y por canal de origen: se ve qué acción de publicidad trae clientes",
         "p1.win": "Dejó las planillas sueltas. El tiempo que gastaba en administrar se le fue a clientes, contenido y marca — y todo eso vuelve al CRM como insumo.",
 
         "p2.state": "En desarrollo · publicada",
+        "p2.date": "Agosto 2026",
         "p2.title": "Sitio web conectado al CRM",
         "p2.sub": "Ella tilda \"publicar\", aprieta un botón y el sitio se reconstruye solo.",
         "p2.b1": "Un Apps Script aparte expone por JSON solo lo publicable: el CRM nunca sale a internet",
@@ -39,6 +43,7 @@ const translations = {
         "p2.cta": "Ver el sitio",
 
         "p3.state": "En producción diaria",
+        "p3.date": "Junio 2026",
         "p3.title": "CoffeeHouse",
         "p3.sub": "Bitácora de calibración de espresso en un teléfono montado en la barra. El proyecto que me enseñó a iterar: cuatro versiones salidas del uso, no del plan.",
         "p3.b1": "Modo kiosk: offline, wake lock, timer que sobrevive la suspensión",
@@ -47,6 +52,7 @@ const translations = {
         "p3.cta": "Caso de estudio",
 
         "p4.state": "En uso",
+        "p4.date": "Octubre 2025",
         "p4.title": "Flujo de Fondos",
         "p4.sub": "Modelo de proyección a 2029 con tres escenarios, más un tablero web de solo lectura.",
         "p4.b1": "El Sheet es la única fuente de verdad; el tablero solo lee",
@@ -55,6 +61,7 @@ const translations = {
         "p4.cap": "Capturas de la vista de demostración, con datos de ejemplo.",
 
         "p5.state": "Terminada",
+        "p5.date": "Mayo 2025",
         "p5.title": "Smart Finance",
         "p5.sub": "PWA de gastos local-first: los datos nunca salen del dispositivo.",
         "p5.b1": "Escaneo de tickets por visión artificial (Gemini)",
@@ -64,8 +71,10 @@ const translations = {
 
         "p6.state": "En curso",
         "p6.title": "Agente de cierres contables",
-        "p6.sub": "Dentro de mi trabajo: uso Copilot sobre las tareas reales de cierre y documento los pasos y las reglas mientras las hago, para construir un agente que las ejecute.",
-        "p6.b1": "Sin resultados todavía: es la dirección, no un logro",
+        "p6.sub": "Dentro de mi trabajo: día a día trabajo con Copilot sobre las tareas reales de cierre, documento pasos y reglas mientras las hago, y de ahí van saliendo automatizaciones nuevas.",
+        "p6.b1": "Mejora continua con IA: cada tarea que repito se vuelve procedimiento escrito y candidata a automatizar",
+        "p6.b2": "Del ida y vuelta con el modelo aparecen soluciones que no estaban en el plan",
+        "p6.b3": "El horizonte es un agente que ejecute el cierre punta a punta",
 
         "how.eyebrow": "02 — Cómo trabajo",
         "how.title": "Entender, construir, sostener",
@@ -124,15 +133,19 @@ const translations = {
 
         "p1.state": "In development · in use",
         "p1.kind": "Real client",
+        "p1.date": "August 2026",
         "p1.title": "CRM Lacalle Servicios Inmobiliarios",
         "p1.sub": "A complete management system for a real-estate broker who went independent. Zero to production, website included, in under ten days.",
         "p1.b1": "Contacts, properties, pipeline, calendar, metrics, photos and branded email",
         "p1.b2": "AI-assisted listing copy (Gemini)",
         "p1.b3": "Dropped Postgres: no new accounts for her, backup via Drive version history",
         "p1.b4": "4 test suites, dated releases with a way back, two manuals",
+        "p1.b5": "Instagram cards straight from the listing, email campaigns and a calendar of dates to post",
+        "p1.b6": "Enquiries by property and by source channel: you can see which marketing action brings clients",
         "p1.win": "She left the scattered spreadsheets behind. The time she spent on admin went to clients, content and brand — and all of it feeds back into the CRM.",
 
         "p2.state": "In development · live",
+        "p2.date": "August 2026",
         "p2.title": "Website wired to the CRM",
         "p2.sub": "She ticks \"publish\", hits a button and the site rebuilds itself.",
         "p2.b1": "A separate Apps Script exposes only publishable records as JSON: the CRM never reaches the internet",
@@ -142,6 +155,7 @@ const translations = {
         "p2.cta": "Visit the site",
 
         "p3.state": "In daily production",
+        "p3.date": "June 2026",
         "p3.title": "CoffeeHouse",
         "p3.sub": "An espresso dialing journal on a phone mounted at the bar. The project that taught me to iterate: four versions that came out of use, not the plan.",
         "p3.b1": "Kiosk mode: offline, wake lock, a timer that survives suspension",
@@ -150,6 +164,7 @@ const translations = {
         "p3.cta": "Case study",
 
         "p4.state": "In use",
+        "p4.date": "October 2025",
         "p4.title": "Cash Flow",
         "p4.sub": "A projection model through 2029 with three scenarios, plus a read-only web dashboard.",
         "p4.b1": "The spreadsheet is the single source of truth; the dashboard only reads",
@@ -158,6 +173,7 @@ const translations = {
         "p4.cap": "Screenshots of the preview view, with sample data.",
 
         "p5.state": "Finished",
+        "p5.date": "May 2025",
         "p5.title": "Smart Finance",
         "p5.sub": "A local-first expense PWA: data never leaves the device.",
         "p5.b1": "Receipt scanning with AI vision (Gemini)",
@@ -167,8 +183,10 @@ const translations = {
 
         "p6.state": "In progress",
         "p6.title": "Month-end close agent",
-        "p6.sub": "Inside my job: I use Copilot on real close tasks and document the steps and rules as I go, to build an agent that can run them.",
-        "p6.b1": "No results yet — this is the direction, not an achievement",
+        "p6.sub": "Inside my job: I work with Copilot on the real close tasks every day, documenting steps and rules as I go, and new automations keep coming out of it.",
+        "p6.b1": "Continuous improvement with AI: every task I repeat becomes a written procedure and a candidate for automation",
+        "p6.b2": "The back-and-forth with the model surfaces solutions that weren't in the plan",
+        "p6.b3": "The horizon is an agent that runs the close end to end",
 
         "how.eyebrow": "02 — How I work",
         "how.title": "Understand, build, maintain",
@@ -258,6 +276,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 main.alt = t.alt;
                 g.querySelectorAll('img').forEach(o => o.classList.remove('on'));
                 t.classList.add('on');
+                // En pantallas chicas la imagen principal queda fuera de vista al
+                // tocar una miniatura: abrimos el visor grande directamente.
+                if (window.matchMedia('(max-width: 760px)').matches) {
+                    const imgs = [...g.querySelectorAll('img')];
+                    open(imgs, Math.max(0, imgs.indexOf(t)));
+                }
             });
         });
     });
