@@ -7,8 +7,10 @@ Sitio estático, sin build. Se abre haciendo doble clic en `index.html`.
 - `index.html` — la página entera. Todo el texto visible lleva `data-i18n`.
 - `js/main.js` — diccionarios ES/EN, cambio de idioma, miniaturas y lightbox.
 - `css/styles.css` — estilos. Paleta y tipografías en el bloque `:root` de arriba.
-- `assets/images/` — capturas: `crm-*`, `web-*`, `coffee-*`, `cashflow-*`, `finance-*`.
+- `assets/images/` — capturas: `crm-*`, `web-*`, `coffee-*`, `cashflow-*`, `finance-*` (Smart Finance), `financeapp-*` (FinanceApp).
+  - `assets/images/_reemplazadas/` — capturas viejas del CRM, ya fuera del sitio. Se pueden borrar.
 - `demo/` — demo de Smart Finance, enlazada desde su tarjeta.
+- `demo-financeapp/` — demo de FinanceApp, enlazada desde su tarjeta.
 
 ## Editar texto
 
@@ -17,7 +19,9 @@ Cada texto vive en dos lugares y hay que tocar los dos:
 1. `index.html`, dentro del elemento con `data-i18n="clave"` (es el fallback si el JS no corre).
 2. `js/main.js`, en `translations.es["clave"]` **y** en `translations.en["clave"]`.
 
-Si falta una clave en un idioma, ese elemento queda con el texto del idioma anterior. Son 84 claves y las dos listas tienen que coincidir.
+Si falta una clave en un idioma, ese elemento queda con el texto del idioma anterior. Son 186 claves y las dos listas tienen que coincidir.
+
+Ojo con el contador de la pestaña “Todos (N)”: vive en el HTML **y** en `tab.all` de los dos diccionarios. Si agregás una tarjeta, hay que tocar los tres.
 
 ## Diseño
 
@@ -41,7 +45,17 @@ La foto no abre el lightbox a propósito: el lightbox es para las capturas de lo
 ## Pendiente
 
 - Un número más del CRM (propiedades cargadas, contactos gestionados).
+- El contador de la portada dice **5 apps** en producción. Con FinanceApp adentro habría que revisarlo.
 - Publicarlo. Sigue siendo lo único que le falta para servir de algo.
+
+## Septiembre 2026 — qué cambió
+
+- Nueva tarjeta **FinanceApp** (séptima), ancho completo, arriba de Flujo de Fondos y Smart Finance:
+  es la integración de las dos y se lee como su sucesora. Claves `p7.*` y `g.fa.*`.
+- Capturas del CRM rehechas contra la versión actual: el menú pasó de Operaciones a
+  **Ventas / Compras / Alquileres**, y la agenda vive adentro del Tablero. Nombres nuevos:
+  `crm-ventas`, `crm-alquileres`, `crm-ficha`. Las de Propiedades, Ficha y Placa son capturas
+  reales con fotos de propiedades; el resto salen de la demo con datos de ejemplo.
 
 ## Tipografía
 

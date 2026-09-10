@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Registrar — FinanceApp 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* FinanceApp 2.0 — styles.css
+   Mismo lenguaje visual que el Dashboard: paleta oscura, IBM Plex, bordes de 4-6px,
+   nada de sombras. Las variables son exactamente las del Index.html del tablero,
+   así las tres secciones se ven como una sola app.
+   Mobile-first (§2.8): el escritorio es la misma pantalla en un viewport ancho. */
+
+:root {
+  --bg:      #0F1B1E;
+  --surface: #16262B;
+  --line:    #24393F;
+  --text:    #E8E4D8;
+  --muted:   #8FA3A3;
+  --usd:     #7FBF8E;
+  --riesgo:  #D26A4B;
+  --estable: #D9A441;
+  --optimo:  #7FBF8E;
+
+  --egreso:   var(--riesgo);
+  --ingreso:  var(--usd);
+  --traspaso: #8AA9C4;
+
+  --tap:      44px;
+  --safe:     env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;            /* 16px evita el zoom automático de iOS al enfocar */
+  line-height: 1.45;
+}
+
+.mono, .monto-box input, .item .imp, .cta input, .conc .fila span:last-child {
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 16px calc(96px + var(--safe));
+}
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .18em;
+  color: var(--muted); text-transform: uppercase;
+}
+h1 { font-size: 22px; font-weight: 600; margin: 4px 0 14px; }
+
+.encabezado { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+.badge {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .06em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 3px;
+  border: 1px solid var(--line); color: var(--muted); white-space: nowrap; margin-top: 6px;
+}
+.badge.mock { border-color: var(--estable); color: var(--estable); }
+
+/* ---------------------------------------------------------------- nav */
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  padding: 8px 16px; min-height: 38px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+  color: var(--muted); cursor: pointer;
+  transition: border-color .15s, color .15s;
+  text-decoration: none; display: inline-flex; align-items: center;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-pressed="true"] { color: var(--text); border-color: var(--text); font-weight: 600; }
+.tab:focus-visible { outline: 2px solid var(--estable); outline-offset: 2px; }
+
+/* ---------------------------------------------------------------- tarjetas */
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 18px; margin-bottom: 14px;
+}
+
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+label.lbl, h2 {
+  display: block; font-size: 12px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+}
+h2 { font-size: 13px; }
+
+/* ---------------------------------------------------------------- monto */
+
+.monto-box { display: flex; align-items: baseline; gap: 10px; }
+.monto-box .signo { font-size: 26px; font-weight: 600; color: var(--muted); }
+#monto {
+  flex: 1; min-width: 0; width: 100%;
+  font-size: 42px; font-weight: 600; line-height: 1;
+  border: none; background: transparent; color: var(--text);
+  padding: 4px 0;
+}
+#monto:focus { outline: none; }
+#monto::placeholder { color: var(--line); }
+.monto-box.egreso  .signo { color: var(--egreso); }
+.monto-box.ingreso .signo { color: var(--ingreso); }
+.monto-box.traspaso .signo { color: var(--traspaso); }
+
+/* ---------------------------------------------------------------- controles */
+
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  min-height: 36px; padding: 7px 14px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 4px;
+  color: var(--muted); cursor: pointer; transition: border-color .15s, color .15s;
+}
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { color: var(--text); border-color: var(--text); font-weight: 600; }
+
+.pick, input[type="text"], input:not([type]), input[type="date"], select {
+  width: 100%; min-height: var(--tap);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 4px;
+  color: var(--text); font: inherit; font-size: 16px; padding: 10px 12px;
+}
+.pick {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; text-align: left; cursor: pointer;
+}
+.pick:hover { border-color: var(--muted); }
+.pick .val { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick .val.vacio { color: var(--muted); }
+.pick .caret { color: var(--muted); font-size: 12px; }
+.pick:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--estable); outline-offset: 2px;
+}
+input[type="date"] { color-scheme: dark; }
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+details.mas summary {
+  cursor: pointer; list-style: none; color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  min-height: var(--tap); display: flex; align-items: center;
+}
+details.mas summary:hover { color: var(--text); }
+details.mas summary::-webkit-details-marker { display: none; }
+details.mas[open] summary { margin-bottom: 12px; }
+
+/* ---------------------------------------------------------------- barra fija */
+
+.barra {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  padding: 12px 16px calc(12px + var(--safe));
+  background: var(--bg); border-top: 1px solid var(--line);
+}
+.barra .inner { max-width: 760px; margin: 0 auto; }
+.btn {
+  width: 100%; min-height: 48px; border-radius: 4px; border: 1px solid var(--text);
+  background: var(--text); color: var(--bg);
+  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.btn[disabled] { opacity: .35; cursor: default; }
+.btn.sec {
+  background: var(--surface); color: var(--muted); border-color: var(--line);
+  min-height: var(--tap); font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+}
+.btn.sec:hover { border-color: var(--muted); color: var(--text); }
+
+/* ---------------------------------------------------------------- hoja inferior */
+
+.sheet-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  opacity: 0; pointer-events: none; transition: opacity .18s;
+}
+.sheet-bg.open { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  max-height: 82vh; display: flex; flex-direction: column;
+  background: var(--surface); border-top: 1px solid var(--line);
+  border-radius: 8px 8px 0 0;
+  transform: translateY(100%); transition: transform .22s ease;
+  padding-bottom: var(--safe); z-index: 50;
+}
+.sheet.open { transform: none; }
+.sheet .head { padding: 16px 16px 10px; border-bottom: 1px solid var(--line); }
+.sheet .head h2 { margin: 0 0 10px; }
+.sheet .lista { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.sheet .opt {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; min-height: var(--tap); padding: 12px 16px;
+  border: none; border-bottom: 1px solid var(--line);
+  background: transparent; color: var(--text); font: inherit; font-size: 15px;
+  text-align: left; cursor: pointer;
+}
+.sheet .opt:hover { background: var(--bg); }
+.sheet .opt small {
+  font-family: 'IBM Plex Mono', monospace; color: var(--muted); font-size: 11px; white-space: nowrap;
+}
+.sheet .grupo {
+  padding: 12px 16px 5px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); background: var(--bg);
+}
+
+/* ---------------------------------------------------------------- listas */
+
+.hoy h2 { margin: 22px 0 10px; }
+.item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--surface); margin-bottom: 6px;
+}
+.item .txt { flex: 1; min-width: 0; }
+.item .txt b { display: block; font-size: 14px; font-weight: 500; }
+.item .txt small { color: var(--muted); font-size: 11px; }
+.item .imp { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.item.egreso   .imp { color: var(--egreso); }
+.item.ingreso  .imp { color: var(--ingreso); }
+.item.traspaso .imp { color: var(--traspaso); }
+.item.anulado { opacity: .4; }
+.item.anulado .imp { text-decoration: line-through; }
+.item .x {
+  border: none; background: transparent; color: var(--muted);
+  font-size: 18px; width: var(--tap); height: var(--tap); cursor: pointer;
+}
+.item .x[disabled] { opacity: .3; cursor: default; }
+
+/* ---------------------------------------------------------------- saldos */
+
+.cta {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+  padding: 11px 14px; margin-bottom: 6px;
+}
+.cta .nom { flex: 1; min-width: 0; }
+.cta .nom b { display: block; font-size: 14px; font-weight: 500; }
+.cta .nom small { color: var(--muted); font-size: 11px; }
+.cta input { width: 132px; flex: none; text-align: right; font-size: 15px; }
+.cta .est { width: 18px; text-align: center; font-size: 15px; }
+.cta.cierra   .est { color: var(--usd); }
+.cta.nocierra .est { color: var(--riesgo); }
+
+.conc {
+  border: 1px solid var(--line); border-radius: 4px; background: var(--surface);
+  padding: 14px; margin-bottom: 8px; font-size: 13px;
+}
+.conc b { font-size: 14px; }
+.conc .fila { display: flex; justify-content: space-between; gap: 12px; margin-top: 5px; }
+.conc.cierra   { border-left: 3px solid var(--usd); }
+.conc.nocierra { border-left: 3px solid var(--riesgo); }
+
+/* ---------------------------------------------------------------- avisos */
+
+.toast {
+  /* Arriba: abajo vive el botón de guardar, que es la zona del pulgar. */
+  position: fixed; left: 12px; right: 12px; top: calc(10px + var(--safe-top));
+  max-width: 736px; margin: 0 auto;
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px; border-radius: 4px;
+  background: var(--text); color: var(--bg); font-size: 14px;
+  transform: translateY(calc(-100% - 24px)); transition: transform .2s ease;
+  z-index: 60; cursor: pointer;
+}
+.toast.open { transform: none; }
+.toast.err { background: var(--riesgo); color: #fff; }
+.toast .msg { flex: 1; min-width: 0; }
+.toast button {
+  border: none; background: transparent; color: inherit;
+  font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer;
+}
+.toast button[disabled] { opacity: .5; cursor: default; text-decoration: none; }
+.toast .cerrar {
+  flex: none; width: 28px; height: 28px; line-height: 1;
+  font-size: 20px; opacity: .7; text-decoration: none;
+}
+
+.nota { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.nota.warn { color: var(--estable); }
+.nota.aviso-doble {
+  margin: 0; padding: 11px 13px; border-radius: 4px;
+  background: var(--bg); border-left: 3px solid var(--traspaso);
+  color: var(--text); font-size: 13px;
+}
+
+/* --------------------------------------------- build de demo */
+#vistaDash{margin:0 -14px}
+#vistaDash iframe{width:100%;height:calc(100vh - 190px);border:0;display:block;background:var(--bg)}
+.tab#tabDash{font:inherit}
+
+body{padding-top:46px}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="encabezado">
+    <div>
+      <div class="eyebrow">Flujo de fondos · carga y control</div>
+      <h1 id="titulo">Registrar movimiento</h1>
+    </div>
+    <span class="badge" id="badge">…</span>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button type="button" class="tab" id="tabDash" data-vista="dash" aria-pressed="false">Dashboard</button>
+    <button type="button" class="tab" data-vista="reg" aria-pressed="true">Registrar</button>
+    <button type="button" class="tab" data-vista="sal" aria-pressed="false">Saldos</button>
+  </nav>
+
+  <div id="vistaReg">
+
+  <!-- ------------------------------------------------ formulario -->
+  <form class="card" id="form" autocomplete="off">
+
+    <div class="field">
+      <label class="lbl" for="monto">Monto</label>
+      <div class="monto-box egreso" id="montoBox">
+        <span class="signo" id="signo">−$</span>
+        <input id="monto" inputmode="decimal" placeholder="0" aria-label="Monto">
+      </div>
+      <p class="nota" id="notaMonto" hidden></p>
+    </div>
+
+    <div class="field">
+      <label class="lbl">Tipo</label>
+      <div class="chips" id="tipos" role="group" aria-label="Tipo de movimiento"></div>
+    </div>
+
+    <div class="field" id="fConcepto">
+      <label class="lbl" for="bConcepto">Concepto</label>
+      <button type="button" class="pick" id="bConcepto">
+        <span class="val vacio">Elegir concepto</span><span class="caret">▾</span>
+      </button>
+    </div>
+
+    <div class="field" id="fSub" hidden>
+      <label class="lbl" for="bSub">Subcategoría</label>
+      <button type="button" class="pick" id="bSub">
+        <span class="val vacio">Elegir subcategoría</span><span class="caret">▾</span>
+      </button>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="bCuenta" id="lblCuenta">Cuenta</label>
+      <button type="button" class="pick" id="bCuenta">
+        <span class="val vacio">Elegir cuenta</span><span class="caret">▾</span>
+      </button>
+    </div>
+
+    <div class="field" id="fDestino" hidden>
+      <label class="lbl" for="bDestino">Cuenta destino</label>
+      <button type="button" class="pick" id="bDestino">
+        <span class="val vacio">Elegir destino</span><span class="caret">▾</span>
+      </button>
+    </div>
+
+    <div class="field" id="fFci" hidden>
+      <p class="nota aviso-doble" id="notaFci"></p>
+    </div>
+
+    <div class="field row2">
+      <div>
+        <label class="lbl" for="fecha">Fecha</label>
+        <input type="date" id="fecha">
+      </div>
+      <div>
+        <label class="lbl" for="medio">Medio</label>
+        <select id="medio">
+          <option value="">—</option>
+          <option value="debito">Débito</option>
+          <option value="transferencia">Transferencia</option>
+          <option value="qr">QR / billetera</option>
+          <option value="efectivo">Efectivo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <button type="button" class="btn sec" id="bDesc">+ Descripción</button>
+      <input type="text" id="desc" placeholder="Opcional" hidden>
+    </div>
+
+    <details class="mas" id="mas">
+      <summary>Más opciones</summary>
+      <div class="field row2">
+        <div>
+          <label class="lbl" for="moneda">Moneda</label>
+          <select id="moneda"><option>ARS</option><option>USD</option></select>
+        </div>
+        <div>
+          <label class="lbl" for="tc">TC aplicado</label>
+          <input type="text" id="tc" inputmode="decimal" placeholder="Sólo si es USD">
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl" for="foto">Comprobante</label>
+        <input type="file" id="foto" accept="image/*" capture="environment">
+        <p class="nota">Se guarda en Drive a partir de F6. Por ahora no se sube.</p>
+      </div>
+    </details>
+
+  </form>
+
+  <!-- ------------------------------------------------ cargados hoy -->
+  <section class="hoy">
+    <h2>Cargados recién</h2>
+    <div id="lista"><p class="nota">Todavía no cargaste nada en esta sesión.</p></div>
+  </section>
+
+  </div><!-- /vistaReg -->
+
+  <!-- ---------------------------------------------- vista tablero -->
+  <div id="vistaDash" hidden><iframe id="ifDash" title="Tablero"></iframe></div>
+
+  <!-- ------------------------------------------------ vista saldos -->
+  <div id="vistaSal" hidden>
+    <div class="card">
+      <div class="field">
+        <label class="lbl" for="fechaSaldos">Fecha de la declaración</label>
+        <input type="date" id="fechaSaldos">
+      </div>
+      <p class="nota">El saldo se copia de la app del banco. Es el único dato que
+        viene de afuera del sistema, y por eso es el que audita.</p>
+    </div>
+
+    <div id="cuentasSaldos"><p class="nota">Cargando cuentas…</p></div>
+
+    <section class="hoy">
+      <h2>Última conciliación</h2>
+      <div id="resConc"><p class="nota">Declará los saldos para ver si cierra.</p></div>
+    </section>
+  </div>
+
+</div>
+
+<!-- ------------------------------------------------ barra fija -->
+<div class="barra">
+  <div class="inner">
+    <button class="btn" id="guardar" disabled>Guardar y seguir</button>
+    <button class="btn" id="guardarSaldos" hidden>Guardar saldos</button>
+  </div>
+</div>
+
+<!-- ------------------------------------------------ hoja inferior -->
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="head">
+    <h2 id="sheetTitulo">Elegir</h2>
+    <input type="text" id="sheetBuscar" placeholder="Buscar…" aria-label="Buscar">
+  </div>
+  <div class="lista" id="sheetLista"></div>
+</div>
+
+<!-- ------------------------------------------------ toast -->
+<div class="toast" id="toast" role="status">
+  <span class="msg" id="toastMsg"></span>
+  <button id="toastAccion" hidden>Deshacer</button>
+  <button class="cerrar" id="toastCerrar" aria-label="Cerrar aviso">×</button>
+</div>
+
+<script>window.DASH_HTML = "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Flujo de Fondos<\/title>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap\" rel=\"stylesheet\">\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js\"><\/script>\n<style>\n  :root{\n    --bg:#0F1B1E; --surface:#16262B; --line:#24393F;\n    --text:#E8E4D8; --muted:#8FA3A3;\n    --usd:#7FBF8E; --riesgo:#D26A4B; --estable:#D9A441; --optimo:#7FBF8E;\n  }\n  *{box-sizing:border-box;margin:0;padding:0}\n  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;\n       -webkit-font-smoothing:antialiased;padding:20px 16px 48px;max-width:760px;margin:0 auto}\n  .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}\n\n  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;\n           color:var(--muted);text-transform:uppercase}\n  h1{font-size:22px;font-weight:600;margin:4px 0 14px}\n  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}\n  .chip{font-family:'IBM Plex Mono',monospace;font-size:12px;padding:4px 10px;\n        border:1px solid var(--line);border-radius:3px;color:var(--muted)}\n  .chip strong{color:var(--text);font-weight:600}\n\n  /* Selectores de escenario y per\u00edodo */\n  .selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}\n  .selector button{font-family:'IBM Plex Mono',monospace;font-size:13px;padding:7px 14px;\n        background:var(--surface);border:1px solid var(--line);border-radius:4px;\n        color:var(--muted);cursor:pointer;transition:border-color .15s,color .15s}\n  .selector button:hover{border-color:var(--muted)}\n  .selector button.on{color:var(--text);border-color:var(--text);font-weight:600}\n  .selector button:focus-visible{outline:2px solid var(--estable);outline-offset:2px}\n  .selector.periodos{margin-bottom:10px}\n  .selector.periodos button{font-size:12px;padding:5px 11px}\n  .selector.meses{margin-bottom:20px}\n  .selector.meses button{font-size:11px;padding:4px 8px}\n  .sel-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;\n             width:100%;margin-bottom:2px}\n\n  .card{background:var(--surface);border:1px solid var(--line);border-radius:6px;\n        padding:18px;margin-bottom:14px}\n  .kpi-label{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}\n  .kpi-usd{font-family:'IBM Plex Mono',monospace;font-size:42px;font-weight:600;\n           color:var(--usd);line-height:1;font-variant-numeric:tabular-nums}\n  .kpi-usd small{font-size:18px;color:var(--muted);font-weight:400}\n  .kpi-sub{font-size:12px;color:var(--muted);margin-top:8px}\n\n  .runway{margin-top:18px}\n  .runway-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}\n  .runway-val{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600}\n  .runway-track{position:relative;height:10px;background:var(--bg);border:1px solid var(--line);\n                border-radius:5px;overflow:visible}\n  .runway-fill{height:100%;border-radius:5px;background:var(--usd);transition:width .5s ease}\n  .runway-fill.bajo{background:var(--riesgo)}\n  .runway-umbral{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--text);opacity:.7}\n  .runway-umbral::after{content:'umbral 3m';position:absolute;top:auto;bottom:-20px;left:-16px;\n                        font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap}\n  .runway{padding-bottom:14px}\n\n  .cinta{display:flex;gap:2px;margin-top:10px}\n  .cinta span{flex:1;height:26px;border-radius:2px;opacity:.85;cursor:pointer}\n  .cinta span.sel{outline:2px solid var(--text);outline-offset:1px;opacity:1}\n  .cinta-leyenda{display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--muted)}\n  .dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:-1px}\n  .cinta-anios{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;\n               font-size:10px;color:var(--muted);margin-top:4px}\n\n  .chart-wrap{position:relative;height:230px}\n  h2{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;\n     color:var(--muted);margin-bottom:12px}\n  h2 .alcance{font-weight:400;text-transform:none;letter-spacing:0}\n\n  .kpi-doble{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin-top:4px}\n  .kpi-ars{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;\n           line-height:1.1;font-variant-numeric:tabular-nums}\n  .kpi-sub2{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.04em}\n\n  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}\n  .mini{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px 12px;text-align:center}\n  .mini .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}\n  .mini .v{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;margin-top:3px}\n  .neg{color:var(--riesgo)} .pos{color:var(--usd)}\n\n  .obj{margin-bottom:12px}\n  .obj:last-child{margin-bottom:0}\n  .obj-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}\n  .obj-track{height:7px;background:var(--bg);border:1px solid var(--line);border-radius:4px;overflow:hidden}\n  .obj-fill{height:100%;background:var(--estable);border-radius:4px}\n  .obj-fill.full{background:var(--usd)}\n\n  footer{margin-top:22px;font-size:11px;color:var(--muted);text-align:center;line-height:1.6}\n  #preview-banner{display:none;background:var(--estable);color:#0F1B1E;font-size:12px;\n                  font-weight:600;padding:8px 12px;border-radius:4px;margin-bottom:16px;text-align:center}\n  #cargando{text-align:center;color:var(--muted);padding:60px 0;font-family:'IBM Plex Mono',monospace;font-size:13px}\n  @media (prefers-reduced-motion: reduce){ .runway-fill{transition:none} }\n<\/style>\n<\/head>\n<body>\n\n<div id=\"preview-banner\">VISTA PREVIA LOCAL \u2014 datos de ejemplo, no del archivo<\/div>\n<div id=\"cargando\">consultando el tablero y recalculando los tres escenarios\u2026<\/div>\n\n<div id=\"app\" style=\"display:none\">\n  <div class=\"eyebrow\">Informe de gesti\u00f3n \u00b7 solo lectura<\/div>\n  <h1>Flujo de Fondos<\/h1>\n  <div class=\"meta\">\n    <span class=\"chip\">Consulta <strong id=\"generado\" class=\"mono\">\u2014<\/strong><\/span>\n  <\/div>\n\n  <!-- KPI norte -->\n  <div class=\"card\">\n    <div class=\"kpi-label\">Posici\u00f3n proyectada \u00b7 a <span id=\"kpiMes\" class=\"mono\" style=\"color:var(--text)\">\u2014<\/span><\/div>\n    <div class=\"kpi-doble\">\n      <div>\n        <div class=\"kpi-usd\"><span id=\"fondoUSD\">\u2014<\/span> <small>USD<\/small><\/div>\n        <div class=\"kpi-sub2\">Fondo acumulado \u00b7 ahorro y cobertura<\/div>\n      <\/div>\n      <div>\n        <div class=\"kpi-ars\"><span id=\"fondoConting\">\u2014<\/span><\/div>\n        <div class=\"kpi-sub2\">Caja en pesos \u00b7 saldo l\u00edquido del mes<\/div>\n      <\/div>\n    <\/div>\n\n    <div class=\"runway\">\n      <div class=\"runway-head\">\n        <span class=\"kpi-label\" style=\"margin:0\">Margen de cobertura<\/span>\n        <span class=\"runway-val mono\"><span id=\"margen\">\u2014<\/span> <span style=\"font-size:12px;color:var(--muted)\">meses<\/span><\/span>\n      <\/div>\n      <div class=\"runway-track\">\n        <div class=\"runway-fill\" id=\"runwayFill\" style=\"width:0%\"><\/div>\n        <div class=\"runway-umbral\" id=\"runwayUmbral\"><\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n\n  <!-- Cinta de liquidez -->\n  <div class=\"card\">\n    <h2>Estado de liquidez, mes a mes<\/h2>\n    <div class=\"cinta\" id=\"cinta\"><\/div>\n    <div class=\"cinta-anios\" id=\"cintaAnios\"><\/div>\n    <div class=\"cinta-leyenda\">\n      <span><i class=\"dot\" style=\"background:var(--riesgo)\"><\/i>Riesgo<\/span>\n      <span><i class=\"dot\" style=\"background:var(--estable)\"><\/i>Estable<\/span>\n      <span><i class=\"dot\" style=\"background:var(--optimo)\"><\/i>\u00d3ptimo<\/span>\n    <\/div>\n  <\/div>\n\n  <div class=\"selector\" id=\"selEscenarios\" role=\"tablist\" aria-label=\"Escenario\">\n    <span class=\"sel-label\">Escenario<\/span>\n  <\/div>\n  <div class=\"selector periodos\" id=\"selPeriodos\" role=\"tablist\" aria-label=\"Per\u00edodo\">\n    <span class=\"sel-label\">Per\u00edodo<\/span>\n  <\/div>\n  <div class=\"selector meses\" id=\"selMeses\" role=\"tablist\" aria-label=\"Mes\" style=\"display:none\"><\/div>\n\n  <div class=\"card\">\n    <h2>Fondo acumulado y compra mensual <span class=\"alcance\">\u00b7 USD<\/span><\/h2>\n    <div class=\"chart-wrap\"><canvas id=\"chartUSD\"><\/canvas><\/div>\n  <\/div>\n\n  <div class=\"card\">\n    <h2>Ingresos vs. gastos <span class=\"alcance\">\u00b7 ARS<\/span><\/h2>\n    <div class=\"chart-wrap\"><canvas id=\"chartFlujo\"><\/canvas><\/div>\n  <\/div>\n\n  <div class=\"card\">\n    <h2>Margen de cobertura vs. umbral<\/h2>\n    <div class=\"chart-wrap\"><canvas id=\"chartMargen\"><\/canvas><\/div>\n  <\/div>\n\n  <div class=\"card\">\n    <h2>Promedios mensuales (ARS) <span class=\"alcance\" id=\"alcanceProm\"><\/span><\/h2>\n    <div class=\"grid\">\n      <div class=\"mini\"><div class=\"l\">Ingresos<\/div><div class=\"v\" id=\"pIng\">\u2014<\/div><\/div>\n      <div class=\"mini\"><div class=\"l\">Egresos fijos<\/div><div class=\"v\" id=\"pEgr\">\u2014<\/div><\/div>\n      <div class=\"mini\"><div class=\"l\">Cuotas y pr\u00e9stamos<\/div><div class=\"v\" id=\"pCuo\">\u2014<\/div><\/div>\n      <div class=\"mini\"><div class=\"l\">Tasa de ahorro<\/div><div class=\"v\" id=\"pTas\">\u2014<\/div><\/div>\n      <div class=\"mini\"><div class=\"l\">Flujo neto<\/div><div class=\"v\" id=\"pFlu\">\u2014<\/div><\/div>\n    <\/div>\n  <\/div>\n\n  <div class=\"card\">\n    <h2>Cobertura de objetivos <span class=\"alcance\" id=\"alcanceObj\"><\/span><\/h2>\n    <div id=\"objetivos\"><\/div>\n  <\/div>\n\n  <footer>\n    Fuente: TABLERO_CONTROL del Google Sheet \u00b7 los tres escenarios se recalculan al cargar; el archivo queda en su escenario original.<br>\n    El registro y los supuestos se editan en el Sheet, no ac\u00e1.\n  <\/footer>\n<\/div>\n\n<script>\nconst UMBRAL = 3, RUNWAY_MAX = 12;\nconst cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();\nconst colorEstado = e => ({'Riesgo':cssVar('--riesgo'),'Estable':cssVar('--estable'),'\u00d3ptimo':cssVar('--optimo')})[e] || cssVar('--line');\n\nconst fmt0   = v => Math.round(v).toLocaleString('es-AR');                       // sin decimales\nconst fmtUSD = v => fmt0(v);\nconst fmtARS = v => '$ ' + (Math.abs(v)>=1e6 ? (v/1e6).toLocaleString('es-AR',{maximumFractionDigits:2})+' M' : fmt0(v));\nconst fmtK   = v => Math.abs(v)>=1e6 ? '$ '+(v/1e6).toLocaleString('es-AR',{maximumFractionDigits:1})+' M'\n                 : Math.abs(v)>=1e3 ? '$ '+(v/1e3).toLocaleString('es-AR',{maximumFractionDigits:0})+' K'\n                 : '$ '+fmt0(v);\nconst fmtPct = v => (v*100).toLocaleString('es-AR',{maximumFractionDigits:1})+' %';\nconst fmtMes = ym => { const [y,m]=ym.split('-');\n  return ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+m-1]+' '+y.slice(2); };\nconst mesCorto = ym => fmtMes(ym).split(' ')[0];\nconst hoyYM = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); };\nconst mesIdx = ym => { const [y,m]=ym.split('-').map(Number); return y*12+m; };\n// Si el mes pedido no existe en la serie visible, devuelve el m\u00e1s cercano disponible\nfunction ajustarMes(deseado, serie){\n  if (serie.some(s=>s.fecha===deseado)) return deseado;\n  let mejor = serie[serie.length-1].fecha, dist = Infinity;\n  serie.forEach(s=>{ const d = Math.abs(mesIdx(s.fecha)-mesIdx(deseado));\n    if (d < dist){ dist = d; mejor = s.fecha; } });\n  return mejor;\n}\n\n// ---------- Estado de la app ----------\nlet DATA = null;\nlet escenarioVisto = null;\nlet periodoVisto = 'Todo';\nlet mesVisto = null;                 // mes navegado; por defecto, el \u00faltimo del per\u00edodo visible\nlet charts = { usd:null, flujo:null, margen:null };\n\n// L\u00ednea vertical sutil: marca el mes navegado por defecto, o el punto bajo el cursor\nconst lineaMes = {\n  id: 'lineaMes',\n  afterDraw(chart){\n    let x = null;\n    const act = chart.tooltip && chart.tooltip.getActiveElements ? chart.tooltip.getActiveElements() : [];\n    if (act.length) x = act[0].element.x;\n    else if (chart.$mesIdx != null) {\n      const p = chart.getDatasetMeta(0).data[chart.$mesIdx];\n      if (p) x = p.x;\n    }\n    if (x == null) return;\n    const {ctx, chartArea:{top,bottom}} = chart;\n    ctx.save();\n    ctx.strokeStyle = 'rgba(232,228,216,.28)';\n    ctx.lineWidth = 1;\n    ctx.setLineDash([3,4]);\n    ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,bottom); ctx.stroke();\n    ctx.restore();\n  }\n};\n\nfunction iniciar(d){\n  DATA = d;\n  escenarioVisto = d.escenarioActivo;\n  document.getElementById('cargando').style.display='none';\n  document.getElementById('app').style.display='block';\n  document.getElementById('generado').textContent = d.generadoEl;\n\n  // Botonera de escenarios\n  const se = document.getElementById('selEscenarios');\n  d.escenarios.forEach(esc=>{\n    const b = document.createElement('button');\n    b.textContent = esc;\n    b.dataset.esc = esc;\n    b.onclick = ()=>{ escenarioVisto = esc; pintar(); };\n    se.appendChild(b);\n  });\n\n  // Botonera de per\u00edodos: a\u00f1os presentes en la serie + Todo\n  const anios = [...new Set(d.porEscenario[escenarioVisto].serie.map(s=>s.fecha.slice(0,4)))];\n  const sp = document.getElementById('selPeriodos');\n  ['Todo', ...anios].forEach(per=>{\n    const b = document.createElement('button');\n    b.textContent = per;\n    b.dataset.per = per;\n    b.onclick = ()=>{\n      periodoVisto = per;\n      if (per === 'Todo') mesVisto = hoyYM();                 // el presente como referencia\n      else if (mesVisto) mesVisto = per + '-' + mesVisto.slice(5); // mismo mes, otro a\u00f1o\n      pintar();\n    };\n    sp.appendChild(b);\n  });\n\n  crearCharts();\n  pintar();\n}\n\nfunction serieVisible(){\n  const s = DATA.porEscenario[escenarioVisto].serie;\n  return periodoVisto==='Todo' ? s : s.filter(x=>x.fecha.slice(0,4)===periodoVisto);\n}\n\nfunction pintar(){\n  const esc = DATA.porEscenario[escenarioVisto];\n  const serie = serieVisible();\n\n  // Estado visual de botoneras\n  document.querySelectorAll('#selEscenarios button').forEach(b=>\n    b.classList.toggle('on', b.dataset.esc===escenarioVisto));\n  document.querySelectorAll('#selPeriodos button').forEach(b=>\n    b.classList.toggle('on', b.dataset.per===periodoVisto));\n\n  // KPIs del mes navegado (por defecto, el mes calendario actual)\n  mesVisto = ajustarMes(mesVisto || hoyYM(), serie);\n  const punto = serie.find(s=>s.fecha===mesVisto);\n  document.getElementById('kpiMes').textContent = fmtMes(punto.fecha);\n  document.getElementById('fondoUSD').textContent = fmtUSD(punto.fondoUSD);\n  const conting = isFinite(punto.fondoContingARS) ? punto.fondoContingARS : esc.kpis.fondoContingARS;\n  document.getElementById('fondoConting').textContent = isFinite(conting) ? fmtARS(conting) : '\u2014';\n  document.getElementById('margen').textContent = punto.margen.toLocaleString('es-AR',{maximumFractionDigits:1});\n  const fill = document.getElementById('runwayFill');\n  fill.style.width = Math.min(punto.margen/RUNWAY_MAX,1)*100 + '%';\n  fill.classList.toggle('bajo', punto.margen < UMBRAL);\n\n  // Chips de mes: visibles solo cuando hay un a\u00f1o elegido\n  const sm = document.getElementById('selMeses');\n  if (periodoVisto === 'Todo') {\n    sm.style.display = 'none';\n  } else {\n    sm.style.display = 'flex';\n    sm.innerHTML = '<span class=\"sel-label\">Mes<\/span>';\n    serie.forEach(s=>{\n      const b = document.createElement('button');\n      b.textContent = mesCorto(s.fecha);\n      b.classList.toggle('on', s.fecha === mesVisto);\n      b.onclick = ()=>{ mesVisto = s.fecha; pintar(); };\n      sm.appendChild(b);\n    });\n  }\n  document.getElementById('runwayUmbral').style.left = (UMBRAL/RUNWAY_MAX*100)+'%';\n\n  // Cinta de liquidez del per\u00edodo visible\n  const cinta = document.getElementById('cinta');\n  cinta.innerHTML = '';\n  serie.forEach(s=>{\n    const el = document.createElement('span');\n    el.style.background = colorEstado(s.estado);\n    el.title = fmtMes(s.fecha)+' \u00b7 '+s.estado+' \u00b7 '+s.margen.toFixed(1)+' m';\n    if (s.fecha === mesVisto) el.classList.add('sel');\n    el.onclick = ()=>{ mesVisto = s.fecha; pintar(); };\n    cinta.appendChild(el);\n  });\n  const anios = [...new Set(serie.map(s=>s.fecha.slice(0,4)))];\n  document.getElementById('cintaAnios').innerHTML = anios.map(a=>'<span>'+a+'<\/span>').join('');\n\n  // Gr\u00e1ficos\n  const labels = serie.map(s=>fmtMes(s.fecha));\n  const mi = serie.findIndex(s=>s.fecha===mesVisto);\n  charts.usd.$mesIdx = mi; charts.flujo.$mesIdx = mi; charts.margen.$mesIdx = mi;\n  charts.usd.data.labels = labels;\n  charts.usd.data.datasets[0].data = serie.map(s=>s.fondoUSD);\n  // Compra USD del mes: ARS convertidos al TC de la columna M; sin TC no se dibuja el punto\n  charts.usd.data.datasets[1].data = serie.map(s=> s.tc>0 ? s.compraUSDARS/s.tc : null);\n  charts.usd.update();\n  charts.flujo.data.labels = labels;\n  charts.flujo.data.datasets[0].data = serie.map(s=>s.ingresos);\n  charts.flujo.data.datasets[1].data = serie.map(s=>s.egresos + s.cuotas);\n  charts.flujo.update();\n  charts.margen.data.labels = labels;\n  charts.margen.data.datasets[0].data = serie.map(s=>s.margen);\n  charts.margen.data.datasets[1].data = serie.map(()=>UMBRAL);\n  charts.margen.update();\n\n  // Promedios recalculados sobre el per\u00edodo visible\n  const n = serie.length || 1;\n  const avg = f => serie.reduce((a,s)=>a+f(s),0)/n;\n  document.getElementById('alcanceProm').textContent =\n    periodoVisto==='Todo' ? '\u00b7 horizonte completo' : '\u00b7 '+periodoVisto;\n  document.getElementById('pIng').textContent = fmtARS(avg(s=>s.ingresos));\n  document.getElementById('pEgr').textContent = fmtARS(avg(s=>s.egresos));\n  document.getElementById('pCuo').textContent = fmtARS(avg(s=>s.cuotas));\n  const tasa = avg(s=>s.tasaAhorro), flujo = avg(s=>s.flujoNeto);\n  const tas = document.getElementById('pTas');\n  tas.textContent = fmtPct(tasa);\n  tas.className = 'v ' + (tasa>=0?'pos':'neg');\n  const flu = document.getElementById('pFlu');\n  flu.textContent = fmtARS(flujo);\n  flu.className = 'v ' + (flujo>=0?'pos':'neg');\n\n  // Objetivos: cobertura del fondo del mes navegado sobre cada monto objetivo (USD)\n  document.getElementById('alcanceObj').textContent = '\u00b7 a ' + fmtMes(punto.fecha);\n  const cont = document.getElementById('objetivos');\n  cont.innerHTML = '';\n  esc.objetivos.forEach(o=>{\n    // El tablero guarda cobertura al mes de G3; el monto objetivo se despeja: objetivo = D7 / cobertura\n    const objetivoUSD = (o.cobertura && isFinite(o.cobertura) && o.cobertura > 0 && esc.kpis.fondoUSD > 0)\n      ? esc.kpis.fondoUSD / o.cobertura : null;\n    const sinDato = !objetivoUSD || !isFinite(objetivoUSD);\n    const pct = sinDato ? 0 : Math.max(0, punto.fondoUSD / objetivoUSD);\n    const detalle = sinDato ? 'sin dato en el tablero'\n                            : fmtPct(pct)+' de USD '+fmt0(objetivoUSD);\n    const div = document.createElement('div');\n    div.className = 'obj';\n    div.innerHTML =\n      '<div class=\"obj-head\"><span>'+o.nombre+'<\/span>'+\n      '<span class=\"mono\">'+detalle+'<\/span><\/div>'+\n      '<div class=\"obj-track\"><div class=\"obj-fill'+(pct>=1?' full':'')+\n      '\" style=\"width:'+Math.min(pct,1)*100+'%\"><\/div><\/div>';\n    cont.appendChild(div);\n  });\n}\n\nfunction crearCharts(){\n  const gridCol = cssVar('--line'), tickCol = cssVar('--muted');\n  const base = tooltipFmt => ({\n    responsive:true, maintainAspectRatio:false, animation:{duration:300},\n    interaction:{mode:'index', intersect:false},\n    plugins:{ legend:{display:false},\n      tooltip:{ callbacks:{ label: ctx => tooltipFmt(ctx.parsed.y) } } },\n    scales:{ x:{grid:{color:gridCol},ticks:{color:tickCol,maxTicksLimit:8,font:{family:'IBM Plex Mono',size:10}}},\n             y:{grid:{color:gridCol},ticks:{color:tickCol,font:{family:'IBM Plex Mono',size:10},\n                callback:v=>fmt0(v)}} }\n  });\n\n  charts.usd = new Chart(document.getElementById('chartUSD'),{\n    type:'line',\n    data:{labels:[], datasets:[\n      { label:'Fondo acumulado', data:[], borderColor:cssVar('--usd'),\n        backgroundColor:'rgba(127,191,142,.12)', fill:true, borderWidth:2, pointRadius:0,\n        pointHitRadius:12, tension:.25 },\n      { label:'Compra USD del mes', data:[], borderColor:cssVar('--estable'),\n        borderWidth:1.5, borderDash:[6,4], pointRadius:0, pointHitRadius:12,\n        tension:.25 }\n    ]},\n    options: (()=>{ const o = base(v => fmt0(v)+' USD');\n      o.plugins.legend = { display:true, labels:{ color:tickCol, boxWidth:14, boxHeight:2,\n        font:{family:'IBM Plex Sans', size:11} } };\n      o.plugins.tooltip.callbacks.label = ctx => ctx.dataset.label+': '+fmt0(ctx.parsed.y)+' USD';\n      return o; })(),\n    plugins: [lineaMes]\n  });\n\n  charts.flujo = new Chart(document.getElementById('chartFlujo'),{\n    type:'line',\n    data:{labels:[], datasets:[\n      { label:'Ingresos',   data:[], borderColor:cssVar('--usd'),     borderWidth:2, pointRadius:0, pointHitRadius:12, tension:.25 },\n      { label:'Gastos',     data:[], borderColor:cssVar('--riesgo'),  borderWidth:2, pointRadius:0, pointHitRadius:12, tension:.25 }\n    ]},\n    options: (()=>{ const o = base(v=>v);\n      o.plugins.legend = { display:true, labels:{ color:tickCol, boxWidth:14, boxHeight:2,\n        font:{family:'IBM Plex Sans', size:11} } };\n      o.plugins.tooltip.callbacks.label = ctx => ctx.dataset.label+': '+fmtK(ctx.parsed.y);\n      o.scales.y.ticks.callback = v => fmtK(v);\n      return o; })(),\n    plugins: [lineaMes]\n  });\n\n  charts.margen = new Chart(document.getElementById('chartMargen'),{\n    type:'line',\n    data:{labels:[], datasets:[\n      { data:[], borderColor:cssVar('--estable'), borderWidth:2, pointRadius:0,\n        pointHitRadius:12, tension:.25 },\n      { data:[], borderColor:cssVar('--text'), borderWidth:1, borderDash:[5,5], pointRadius:0 }\n    ]},\n    options: (()=>{ const o = base(v => v.toLocaleString('es-AR',{maximumFractionDigits:1})+' meses');\n      o.plugins.tooltip.filter = i => i.datasetIndex===0;   // el umbral no muestra tooltip\n      o.scales.y.ticks.callback = v => v;                    // meses, escala chica\n      return o; })(),\n    plugins: [lineaMes]\n  });\n}\n\nfunction fallo(err){\n  document.getElementById('cargando').textContent = 'No se pudo leer el tablero: '+ (err && err.message || err);\n}\n\n// ---------- Arranque ----------\nif (typeof google !== 'undefined' && google.script) {\n  google.script.run.withSuccessHandler(iniciar).withFailureHandler(fallo).getDashboardData();\n} else {\n  document.getElementById('preview-banner').style.display='block';\n  const meses=[], ini=new Date(2025,10,1);\n  for(let i=0;i<50;i++){ const f=new Date(ini.getFullYear(),ini.getMonth()+i,1);\n    meses.push(f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0')); }\n  const arma = factor => {\n    let usd=0;\n    const serie = meses.map((m,i)=>{ usd += (i<4?0 : (400+i*45)*factor);\n      const margen = Math.max(.3, usd/(2800 - i*10));\n      return { fecha:m, ingresos:(5000000+i*60000)*factor, egresos:2300000+i*20000,\n               cuotas:i<38?850000:0, tasaAhorro:.05+.01*i*factor, flujoNeto:(i%7===0?-1:1)*(300000+i*40000),\n               fondoContingARS:500000, compraUSDARS:(i<4?0:(600000+i*35000)*factor),\n               fondoUSD:usd, tc:1480+i*15, fondoARS:usd*(1480+i*15), margen,\n               estado: margen<1.5?'Riesgo': margen<8?'Estable':'\u00d3ptimo' }; });\n    const u = serie[49];\n    return { kpis:{fondoUSD:u.fondoUSD, margenMeses:u.margen, fondoContingARS:500000},\n             objetivos:[{nombre:'Viaje',cobertura:19.56*factor},{nombre:'Depto',cobertura:1.30*factor},\n                        {nombre:'Casa',cobertura:0.78*factor}], serie };\n  };\n  iniciar({ escenarios:['Pesimista','Base','Optimista'], escenarioActivo:'Base',\n    mesSeleccionado:meses[49],\n    porEscenario:{ Pesimista:arma(.55), Base:arma(1), Optimista:arma(1.45) },\n    generadoEl:'vista previa' });\n}\n<\/script>\n<\/body>\n<\/html>\n";</script>
+<script>
+/**
+ * FinanceApp 2.0 — api.js
+ *
+ * Única puerta de salida de datos del front. Dos adaptadores intercambiables:
+ *   · MockAdapter — datos de ejemplo, para iterar en el navegador sin Google.
+ *   · GasAdapter  — google.script.run envuelto en promesas.
+ *
+ * Ningún otro archivo llama a Google directamente. Esta capa es lo que hace
+ * barata la eventual mudanza a otro hosting (ver §2.10 del documento).
+ */
+
+(function (global) {
+  'use strict';
+
+  // ---------------------------------------------------------------- GAS
+
+  /**
+   * Las funciones srv* del server devuelven STRING JSON, no objetos: Apps Script
+   * serializa los objetos por su cuenta y ante cualquier valor que no le gusta
+   * devuelve null sin avisar. Mandar JSON hace el transporte predecible.
+   */
+  function gasCall(fn, args) {
+    return new Promise(function (resolve, reject) {
+      google.script.run
+        .withSuccessHandler(function (txt) {
+          if (txt === null || txt === undefined) {
+            return reject(new Error('El servidor no devolvió nada. Revisá el registro de ejecuciones.'));
+          }
+          try { resolve(typeof txt === 'string' ? JSON.parse(txt) : txt); }
+          catch (e) { reject(new Error('Respuesta ilegible del servidor: ' + String(txt).slice(0, 120))); }
+        })
+        .withFailureHandler(function (err) { reject(new Error(err && err.message || String(err))); })
+        [fn].apply(null, args || []);
+    });
+  }
+
+  var GasAdapter = {
+    modo: 'vivo',
+    getCatalogos: function () { return gasCall('srvGetCatalogos'); },
+    appendMovimientos: function (lote, opts) { return gasCall('srvAppendMovimientos', [lote, opts || {}]); },
+    appendCompraTarjeta: function (c, opts) { return gasCall('srvAppendCompraTarjeta', [c, opts || {}]); },
+    declararSaldos: function (l, opts) { return gasCall('srvDeclararSaldos', [l, opts || {}]); },
+    anularMovimiento: function (id, motivo) { return gasCall('srvAnularMovimiento', [id, motivo]); },
+    getUltimosMovimientos: function (n) { return gasCall('srvUltimosMovimientos', [n]); },
+    estadoSaldos: function () { return gasCall('srvEstadoSaldos'); },
+    registrarRendimiento: function (c, m) { return gasCall('srvRegistrarRendimiento', [c, m]); }
+  };
+
+  // ---------------------------------------------------------------- MOCK
+
+  var MOCK_CUENTAS = [
+    { id: 'galicia_ars', nombre: 'Galicia caja de ahorro', tipo: 'banco', moneda: 'ARS', concilia: 'si', activo: 'si' },
+    { id: 'galicia_usd', nombre: 'Galicia caja de ahorro USD', tipo: 'banco', moneda: 'USD', concilia: 'si', activo: 'si' },
+    { id: 'fima', nombre: 'FIMA', tipo: 'fci', moneda: 'ARS', concilia: 'si', activo: 'si' },
+    { id: 'mercadopago', nombre: 'MercadoPago', tipo: 'billetera', moneda: 'ARS', concilia: 'si', activo: 'si' },
+    { id: 'efectivo', nombre: 'Efectivo', tipo: 'efectivo', moneda: 'ARS', concilia: 'si', activo: 'si' }
+  ];
+
+  var MOCK_CONCEPTOS = [
+    ['Sueldo', 2, 'INGRESOS', 'no'], ['Imp. Ganancias', 3, 'INGRESOS', 'no'],
+    ['Bono/Vacaciones/Regalos/Aum. retroactivo', 4, 'INGRESOS', 'no'],
+    ['Alquiler Joaco', 5, 'INGRESOS', 'no'], ['SAC', 7, 'INGRESOS', 'no'],
+    ['Alquiler', 9, 'EGRESOS', 'si'], ['Gastos Alquiler', 10, 'EGRESOS', 'si'],
+    ['Luz', 11, 'EGRESOS', 'si'], ['Gas', 12, 'EGRESOS', 'si'], ['Agua', 13, 'EGRESOS', 'si'],
+    ['Celular', 14, 'EGRESOS', 'si'], ['Celular abuela', 15, 'EGRESOS', 'si'],
+    ['Internet', 16, 'EGRESOS', 'si'], ['Spotify', 17, 'EGRESOS', 'si'], ['IA', 18, 'EGRESOS', 'si'],
+    ['Seguros', 19, 'EGRESOS', 'si'], ['Gastos Auto', 20, 'EGRESOS', 'si'],
+    ['Patente/Inmobiliario', 21, 'EGRESOS', 'si'], ['Teatro', 22, 'EGRESOS', 'si'],
+    ['Futurock', 23, 'EGRESOS', 'si'], ['Verdulería', 24, 'EGRESOS', 'si'],
+    ['Carnicería', 25, 'EGRESOS', 'si'], ['Supermercado', 26, 'EGRESOS', 'si'],
+    ['Ida a la oficina', 27, 'EGRESOS', 'si'], ['Farmacia', 28, 'EGRESOS', 'si'],
+    ['Regalos cumples', 29, 'EGRESOS', 'si'], ['Delivery/Pedidos', 30, 'EGRESOS', 'si'],
+    ['Salidas', 31, 'EGRESOS', 'si'], ['Cigarrillos', 32, 'EGRESOS', 'si'],
+    ['Flores', 33, 'EGRESOS', 'si'], ['Peluquería', 34, 'EGRESOS', 'si'],
+    ['Limpieza', 35, 'EGRESOS', 'si'], ['Resto Extra', 36, 'EGRESOS', 'si'],
+    ['Gastos Extra', 37, 'EGRESOS', 'si'], ['TC Mamá', 38, 'EGRESOS', 'no'],
+    ['TC Galicia', 39, 'EGRESOS', 'no'],
+    ['Cuota Préstamo MercadoPago', 41, 'DEUDA', 'no'], ['Cuota Préstamo Galicia', 42, 'DEUDA', 'no'],
+    ['Cuota Préstamo Anses', 43, 'DEUDA', 'no'], ['Cuota Préstamo Provincia', 44, 'DEUDA', 'no']
+  ].map(function (c) {
+    return { concepto: c[0], fila: c[1], bloque: c[2], admite_reintegro: c[3], activo: 'si' };
+  });
+
+  var MOCK_SUBS = ['Viaje a Bolivar', 'Almuerzo home office', 'Veterinario Albus', 'Plantas',
+    'Libros', 'Regalos', 'Ropa', 'Hogar', 'Panadería', 'Mudanza a Bolivar',
+    'Eventos/Recitales', 'Vacaciones', 'Quebradura']
+    .map(function (s) { return { concepto: 'Gastos Extra', subcategoria: s, activo: 'si' }; });
+
+  var MockAdapter = {
+    modo: 'mock',
+    _mov: [],
+
+    getCatalogos: function () {
+      return this._demora({
+        cuentas: MOCK_CUENTAS,
+        conceptos: MOCK_CONCEPTOS,
+        subcategorias: MOCK_SUBS,
+        config: { MES_INICIO_LEDGER: '2026-09', MODO: 'sombra' },
+        hoy: new Date().toISOString().slice(0, 10),
+        recientes: {
+          conceptos: { 'Supermercado': 12, 'Salidas': 8, 'Delivery/Pedidos': 6, 'Verdulería': 5, 'Gastos Auto': 4 },
+          cuentas: { 'galicia_ars': 20, 'mercadopago': 9, 'efectivo': 2 }
+        }
+      });
+    },
+
+    appendMovimientos: function (lote, opts) {
+      var self = this;
+      var resultados = lote.map(function (m, i) {
+        // Espeja las validaciones del server, en versión mínima, para que el
+        // mock no de una falsa sensación de que todo entra.
+        if (!(Number(m.monto) > 0)) return { indice: i, ok: false, error: 'Monto inválido' };
+        if (m.fecha > new Date().toISOString().slice(0, 10)) {
+          return { indice: i, ok: false, error: 'No se cargan movimientos futuros' };
+        }
+        if (m.tipo !== 'TRASPASO' && !m.concepto) return { indice: i, ok: false, error: 'Falta el concepto' };
+        if (m.concepto === 'Gastos Extra' && !m.subcategoria) {
+          return { indice: i, ok: false, error: '"Gastos Extra" exige subcategoría' };
+        }
+        if (m.tipo === 'TRASPASO' && (!m.cuenta_destino || m.cuenta_destino === m.cuenta)) {
+          return { indice: i, ok: false, error: 'Traspaso: destino inválido' };
+        }
+        var id = 'mock-' + Date.now() + '-' + i;
+        var filas = m.desde_fci && m.tipo !== 'TRASPASO' ? 2 : 1;
+        self._mov.push({
+          id: id, fecha: m.fecha, tipo: m.tipo, concepto: m.concepto || '(traspaso)',
+          descripcion: m.descripcion, monto: Number(m.monto), cuenta: m.cuenta, estado: 'confirmado'
+        });
+        return { indice: i, ok: true, id: id, filas: new Array(filas) };
+      });
+      var errores = resultados.some(function (r) { return !r.ok; });
+      return this._demora({
+        ok: !errores,
+        escritos: errores ? 0 : resultados.reduce(function (a, r) { return a + (r.filas ? r.filas.length : 0); }, 0),
+        resultados: resultados
+      });
+    },
+
+    appendCompraTarjeta: function (c) {
+      return this._demora({ ok: true, grupo_id: 'mock-tj-' + Date.now(), cuotas: Number(c.cuotas_total) });
+    },
+
+    declararSaldos: function (l) {
+      var self = this;
+      l.forEach(function (d) { self._saldos[d.cuenta] = { saldo: d.saldo_real, fecha: d.fecha }; });
+      return this._demora({ ok: true, escritos: l.length });
+    },
+
+    _saldos: {},
+
+    estadoSaldos: function () {
+      var self = this;
+      return this._demora({
+        hoy: new Date().toISOString().slice(0, 10),
+        cuentas: MOCK_CUENTAS.map(function (c) {
+          var u = self._saldos[c.id];
+          return {
+            id: c.id, nombre: c.nombre, moneda: c.moneda, tipo: c.tipo,
+            ultimoSaldo: u ? u.saldo : (c.id === 'fima' ? 495265 : 0),
+            ultimaFecha: u ? u.fecha : '2026-09-09',
+            cierra: c.id !== 'fima', diferencia: c.id === 'fima' ? -5297.42 : 0,
+            rendimientoSugerido: c.id === 'fima' ? 5297.42 : null,
+            tna: c.id === 'fima' ? 0.43 : null, tnaPlausible: true
+          };
+        })
+      });
+    },
+
+    registrarRendimiento: function () { return this._demora({ ok: true, monto: 5297.42, concepto: 'Rendimientos FIMA' }); },
+
+    anularMovimiento: function (id) {
+      var m = this._mov.filter(function (x) { return x.id === id; })[0];
+      if (m) m.estado = 'anulado';
+      return this._demora({ ok: true });
+    },
+
+    getUltimosMovimientos: function (n) {
+      return this._demora(this._mov.slice(-(n || 20)).reverse());
+    },
+
+    // Simula la latencia real de Apps Script (§2.9) para que la UX se pruebe
+    // contra el peor caso y no contra una respuesta instantánea.
+    _demora: function (v) {
+      return new Promise(function (res) {
+        setTimeout(function () { res(JSON.parse(JSON.stringify(v))); }, 350 + Math.random() * 900);
+      });
+    }
+  };
+
+  // ---------------------------------------------------------------- selector
+
+  var enApps = typeof google !== 'undefined' && google.script && google.script.run;
+  global.API = enApps ? GasAdapter : MockAdapter;
+  global.API.enApps = !!enApps;
+
+})(window);
+
+/* ============================================================ SEMILLA DEMO
+   Números inventados. No hay ni un dato real de nadie acá adentro.
+   Se monta encima del MockAdapter para que las dos pantallas abran con
+   contenido: sin esto, la demo arranca vacía y no se entiende qué hace.
+   ========================================================================= */
+(function () {
+  var A = window.API;
+
+  var hoy = new Date();
+  var d = function (n) {
+    var x = new Date(hoy.getTime() - n * 86400000);
+    return x.toISOString().slice(0, 10);
+  };
+
+  A._mov = [
+    { id: 'demo-1', fecha: d(0), tipo: 'EGRESO',    concepto: 'Supermercado',
+      descripcion: 'Compra semanal', monto: 47820, cuenta: 'galicia_ars', estado: 'confirmado' },
+    { id: 'demo-2', fecha: d(0), tipo: 'EGRESO',    concepto: 'Delivery/Pedidos',
+      descripcion: '', monto: 12400, cuenta: 'mercadopago', estado: 'confirmado' },
+    { id: 'demo-3', fecha: d(1), tipo: 'REINTEGRO', concepto: 'Ida a la oficina',
+      descripcion: 'Nafta del viaje a Capital', monto: 38000, cuenta: 'galicia_ars', estado: 'confirmado' },
+    { id: 'demo-4', fecha: d(1), tipo: 'TRASPASO',  concepto: '(traspaso)',
+      descripcion: 'Rescate para pagar', monto: 90000, cuenta: 'fima', estado: 'confirmado' },
+    { id: 'demo-5', fecha: d(2), tipo: 'DEUDA',     concepto: 'Cuota Préstamo Galicia',
+      descripcion: 'Cuota 7 de 24', monto: 156300, cuenta: 'galicia_ars', estado: 'confirmado' }
+  ];
+
+  /* Una cuenta que no cierra es lo interesante de mostrar: el FCI devenga y la
+     diferencia del tramo ES el rendimiento, no un error. */
+  var DEMO = {
+    galicia_ars: { saldo: 214650,  cierra: true,  dif: 0 },
+    galicia_usd: { saldo: 1840,    cierra: true,  dif: 0 },
+    fima:        { saldo: 1286470, cierra: false, dif: -8412.65,
+                   rend: 8412.65, tna: 0.412 },
+    mercadopago: { saldo: 63120,   cierra: true,  dif: 0 },
+    efectivo:    { saldo: 0,       cierra: true,  dif: 0 }
+  };
+
+  A.estadoSaldos = function () {
+    var self = this;
+    return this._demora({
+      hoy: d(0),
+      cuentas: Object.keys(DEMO).map(function (id) {
+        var base = NOMBRES[id], x = DEMO[id];
+        var u = self._saldos[id];
+        return {
+          id: id, nombre: base.nombre, moneda: base.moneda, tipo: base.tipo,
+          ultimoSaldo: u ? u.saldo : x.saldo,
+          ultimaFecha: u ? u.fecha : d(1),
+          cierra: x.cierra, diferencia: x.dif,
+          rendimientoSugerido: x.rend || null,
+          tna: x.tna === undefined ? null : x.tna,
+          tnaPlausible: true
+        };
+      })
+    });
+  };
+
+  var NOMBRES = {
+    galicia_ars: { nombre: 'Galicia caja de ahorro',     moneda: 'ARS', tipo: 'banco' },
+    galicia_usd: { nombre: 'Galicia caja de ahorro USD', moneda: 'USD', tipo: 'banco' },
+    fima:        { nombre: 'FIMA',                       moneda: 'ARS', tipo: 'fci' },
+    mercadopago: { nombre: 'MercadoPago',                moneda: 'ARS', tipo: 'billetera' },
+    efectivo:    { nombre: 'Efectivo',                   moneda: 'ARS', tipo: 'efectivo' }
+  };
+
+  A.registrarRendimiento = function () {
+    DEMO.fima.cierra = true; DEMO.fima.dif = 0; DEMO.fima.rend = null;
+    return this._demora({ ok: true, monto: 8412.65, concepto: 'Rendimientos FIMA' });
+  };
+
+  /* La demora real de Apps Script es de 1 a 3 segundos (§2.9). Acá se deja una
+     versión corta: alcanza para que se vea que la UI es optimista, sin que la
+     demo parezca trabada. */
+  A._demora = function (v) {
+    return new Promise(function (res) {
+      setTimeout(function () { res(JSON.parse(JSON.stringify(v))); }, 180 + Math.random() * 260);
+    });
+  };
+})();
+
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  function esperar(cond, hacer, intentos) {
+    intentos = intentos === undefined ? 60 : intentos;
+    if (cond()) return hacer();
+    if (intentos <= 0) return;                     // se rinde en silencio
+    setTimeout(function () { esperar(cond, hacer, intentos - 1); }, 100);
+  }
+
+  function elegir(botonId, texto, luego) {
+    $(botonId).click();
+    esperar(function () { return $('sheetLista').children.length > 0; }, function () {
+      var b = Array.prototype.filter.call($('sheetLista').querySelectorAll('button'),
+        function (x) { return x.textContent.indexOf(texto) === 0; })[0];
+      if (b) b.click();
+      setTimeout(luego, 220);
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', function () {
+    esperar(function () { return $('badge').textContent !== 'cargando' &&
+                                 $('tipos').children.length > 0; }, function () {
+      var m = $('monto');
+      m.value = '47820';
+      m.dispatchEvent(new Event('input', { bubbles: true }));
+      elegir('bConcepto', 'Supermercado', function () {
+        elegir('bCuenta', 'Galicia caja de ahorro', function () {
+          $('medio').value = 'debito';
+          $('bDesc').click();
+          $('desc').value = 'Compra semanal';
+          if (document.activeElement) document.activeElement.blur();
+          window.scrollTo(0, 0);
+        });
+      });
+    });
+  });
+})();
+
+</script>
+<script>
+/**
+ * FinanceApp 2.0 — app.js
+ *
+ * Lógica del formulario de registro. Habla sólo con window.API (api.js).
+ *
+ * Principios que este archivo respeta (§2.8 y §2.9 del documento):
+ *   · El formulario está operativo apenas llegan los catálogos. Nada más lo bloquea.
+ *   · UI optimista: el movimiento aparece en la lista al instante; la escritura va atrás.
+ *   · Confirmación con deshacer, nunca un diálogo previo.
+ *   · Guardar no vuelve al inicio: limpia monto y descripción y deja el foco listo.
+ */
+
+(function () {
+  'use strict';
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var TIPOS = [
+    { id: 'EGRESO',    label: 'Gasto',     signo: '−$', clase: 'egreso' },
+    { id: 'INGRESO',   label: 'Ingreso',   signo: '+$', clase: 'ingreso' },
+    { id: 'REINTEGRO', label: 'Reintegro', signo: '+$', clase: 'ingreso' },
+    { id: 'TRASPASO',  label: 'Traspaso',  signo: '$',  clase: 'traspaso' },
+    { id: 'DEUDA',     label: 'Cuota',     signo: '−$', clase: 'egreso' }
+  ];
+
+  var cat = null;                                  // catálogos del server
+  var st = { tipo: 'EGRESO', concepto: '', subcategoria: '', cuenta: '', destino: '' };
+  var pendientes = 0;                              // escrituras en vuelo
+
+  // ================================================================ arranque
+
+  document.addEventListener('DOMContentLoaded', function () {
+    pintarTipos();
+    // La pestaña inicial también viaja desde el server: location.search dentro
+    // del iframe es el del iframe, no el de la app.
+    if (window.TAB_INICIAL === 'sal') setTimeout(function () { irA('sal'); }, 0);
+    $('fecha').value = new Date().toISOString().slice(0, 10);
+    conectar();
+    cargarCatalogos();
+  });
+
+  function cargarCatalogos() {
+    $('badge').textContent = 'cargando';
+    API.getCatalogos().then(function (c) {
+      cat = c;
+      if (c.hoy) $('fecha').value = c.hoy;
+      $('badge').textContent = API.enApps ? (c.config.MODO || 'en vivo') : 'mock';
+      $('badge').classList.toggle('mock', !API.enApps);
+      $('badge').title = API.enApps
+        ? 'Ledger desde ' + c.config.MES_INICIO_LEDGER + ' · modo ' + c.config.MODO
+        : 'Datos de ejemplo. No se escribe nada en la planilla.';
+      revisar();
+    }).catch(function (e) {
+      $('badge').textContent = 'sin conexión';
+      aviso('No pude cargar los catálogos: ' + e.message, true);
+    });
+  }
+
+  // ================================================================ tipos
+
+  function pintarTipos() {
+    $('tipos').innerHTML = '';
+    TIPOS.forEach(function (t) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = t.label;
+      b.setAttribute('aria-pressed', String(t.id === st.tipo));
+      b.onclick = function () { setTipo(t.id); };
+      $('tipos').appendChild(b);
+    });
+  }
+
+  function setTipo(id) {
+    st.tipo = id;
+    var t = tipoActual();
+
+    // Un traspaso no lleva concepto; lleva cuenta destino.
+    var esTraspaso = id === 'TRASPASO';
+    $('fConcepto').hidden = esTraspaso;
+    $('fDestino').hidden = !esTraspaso;
+    $('lblCuenta').textContent = esTraspaso ? 'Cuenta origen' : 'Cuenta';
+
+    $('signo').textContent = t.signo;
+    $('montoBox').className = 'monto-box ' + t.clase;
+
+    // Al cambiar de tipo, un concepto que ya no aplica se limpia.
+    if (st.concepto && !conceptoValido(st.concepto)) setConcepto('');
+
+    pintarTipos();
+    revisarFci();
+    revisar();
+  }
+
+  function tipoActual() {
+    return TIPOS.filter(function (t) { return t.id === st.tipo; })[0];
+  }
+
+  /** Qué conceptos tienen sentido para el tipo elegido. */
+  function conceptosDelTipo() {
+    if (!cat) return [];
+    return cat.conceptos.filter(function (c) {
+      if (st.tipo === 'INGRESO')   return c.bloque === 'INGRESOS';
+      if (st.tipo === 'DEUDA')     return c.bloque === 'DEUDA';
+      // Mismo criterio que el server: si acá se ofrece un concepto que allá se
+      // rechaza, el usuario lo elige y recién al guardar se entera. Una sola regla.
+      if (st.tipo === 'REINTEGRO') return c.admite_reintegro === 'si';
+      if (st.tipo === 'EGRESO')    return c.bloque === 'EGRESOS';
+      return true;
+    });
+  }
+
+  function conceptoValido(nombre) {
+    return conceptosDelTipo().some(function (c) { return c.concepto === nombre; });
+  }
+
+  // ================================================================ selección
+
+  function setConcepto(nombre) {
+    st.concepto = nombre;
+    ponerVal('bConcepto', nombre, 'Elegir concepto');
+    var esExtra = nombre === 'Gastos Extra';
+    $('fSub').hidden = !esExtra;
+    if (!esExtra) { st.subcategoria = ''; ponerVal('bSub', '', 'Elegir subcategoría'); }
+    revisar();
+  }
+
+  function setCuenta(id) {
+    st.cuenta = id;
+    ponerVal('bCuenta', nombreCuenta(id), 'Elegir cuenta');
+    revisarFci();
+    revisar();
+  }
+
+  function ponerVal(btnId, texto, placeholder) {
+    var v = $(btnId).querySelector('.val');
+    v.textContent = texto || placeholder;
+    v.classList.toggle('vacio', !texto);
+  }
+
+  function nombreCuenta(id) {
+    if (!cat) return id;
+    var c = cat.cuentas.filter(function (x) { return x.id === id; })[0];
+    return c ? c.nombre : id;
+  }
+
+  /**
+   * Cuentas que no pagan directo (FIMA): el banco siempre hace rescate a la caja
+   * de ahorro y paga desde ahí. No hay nada que tildar — se elige de dónde salió
+   * la plata y el server arma las dos patas. Acá sólo se avisa qué va a pasar.
+   */
+  function revisarFci() {
+    var c = cat && cat.cuentas.filter(function (x) { return x.id === st.cuenta; })[0];
+    var via = c && c.paga_via && ['EGRESO', 'DEUDA'].indexOf(st.tipo) !== -1 ? c.paga_via : null;
+    var box = $('fFci');
+    box.hidden = !via;
+    if (via) {
+      $('notaFci').textContent =
+        'Se registran dos movimientos, igual que en el banco: el rescate de ' +
+        c.nombre + ' a ' + nombreCuenta(via) + ', y el pago desde ahí.';
+    }
+  }
+
+  // ================================================================ hoja inferior
+
+  var sheetOnPick = null;
+
+  function abrirSheet(titulo, items, onPick) {
+    sheetOnPick = onPick;
+    $('sheetTitulo').textContent = titulo;
+    $('sheetBuscar').value = '';
+    pintarSheet(items, '');
+    $('sheetBuscar').oninput = function () { pintarSheet(items, this.value); };
+    $('sheet').classList.add('open');
+    $('sheetBg').classList.add('open');
+    // En escritorio el buscador se enfoca solo; en el celular no, para que el
+    // teclado no tape media lista antes de que se pueda ver.
+    if (window.matchMedia('(min-width: 700px)').matches) $('sheetBuscar').focus();
+  }
+
+  function cerrarSheet() {
+    $('sheet').classList.remove('open');
+    $('sheetBg').classList.remove('open');
+  }
+
+  function pintarSheet(items, filtro) {
+    var f = quitarTildes(filtro);
+    var vis = items.filter(function (i) {
+      return !f || quitarTildes(i.label).indexOf(f) !== -1;
+    });
+    var cont = $('sheetLista');
+    cont.innerHTML = '';
+    var grupoActual = null;
+    vis.forEach(function (i) {
+      if (i.grupo && i.grupo !== grupoActual) {
+        grupoActual = i.grupo;
+        var g = document.createElement('div');
+        g.className = 'grupo';
+        g.textContent = i.grupo;
+        cont.appendChild(g);
+      }
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.innerHTML = '<span></span>' + (i.nota ? '<small></small>' : '');
+      b.querySelector('span').textContent = i.label;
+      if (i.nota) b.querySelector('small').textContent = i.nota;
+      b.onclick = function () { cerrarSheet(); sheetOnPick(i.value); };
+      cont.appendChild(b);
+    });
+    if (!vis.length) {
+      cont.innerHTML = '<p class="nota" style="padding:16px">Nada coincide con "' + filtro + '".</p>';
+    }
+  }
+
+  function quitarTildes(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  /** Ordena por uso reciente y deja el resto alfabético debajo. */
+  function porUso(items, usos, claveLabel) {
+    var frecuentes = [], resto = [];
+    items.forEach(function (i) {
+      var n = usos[i.value] || usos[i[claveLabel]] || 0;
+      (n > 0 ? frecuentes : resto).push({ i: i, n: n });
+    });
+    frecuentes.sort(function (a, b) { return b.n - a.n; });
+    resto.sort(function (a, b) { return a.i.label.localeCompare(b.i.label, 'es'); });
+    return frecuentes.map(function (x) {
+      x.i.grupo = 'Frecuentes'; x.i.nota = x.n + '×'; return x.i;
+    }).concat(resto.map(function (x) { x.i.grupo = 'Todos'; return x.i; }));
+  }
+
+  // ================================================================ validación
+
+  function montoNumero() {
+    // Acepta "45.000,50" y "45000.50" indistintamente.
+    var t = $('monto').value.trim().replace(/\s/g, '');
+    if (!t) return NaN;
+    if (t.indexOf(',') !== -1) t = t.replace(/\./g, '').replace(',', '.');
+    return Number(t);
+  }
+
+  function revisar() {
+    var m = montoNumero();
+    var ok = cat && isFinite(m) && m > 0 && st.cuenta;
+
+    if (st.tipo === 'TRASPASO') {
+      ok = ok && st.destino && st.destino !== st.cuenta;
+    } else {
+      ok = ok && st.concepto;
+      if (st.concepto === 'Gastos Extra') ok = ok && st.subcategoria;
+    }
+
+    if ($('moneda').value === 'USD') ok = ok && Number($('tc').value) > 0;
+
+    var nota = $('notaMonto');
+    if ($('monto').value.trim() && !(m > 0)) {
+      nota.hidden = false; nota.className = 'nota warn';
+      nota.textContent = 'El monto va siempre en positivo: el signo lo da el tipo.';
+    } else {
+      nota.hidden = true;
+    }
+
+    $('guardar').disabled = !ok;
+    return ok;
+  }
+
+  // ================================================================ guardar
+
+  var guardando = false;
+
+  function guardar() {
+    if (guardando || !revisar()) return;
+    guardando = true;
+    setTimeout(function () { guardando = false; }, 400);   // anti doble-toque
+
+    var mov = {
+      fecha: $('fecha').value,
+      tipo: st.tipo,
+      monto: montoNumero(),
+      cuenta: st.cuenta,
+      descripcion: $('desc').value.trim(),
+      medio_pago: $('medio').value,
+      moneda: $('moneda').value,
+      origen: 'manual'
+    };
+    if (st.tipo === 'TRASPASO') {
+      mov.cuenta_destino = st.destino;
+    } else {
+      mov.concepto = st.concepto;
+      if (st.subcategoria) mov.subcategoria = st.subcategoria;
+      // El asiento compuesto ya no se pide: sale de paga_via en CUENTAS.
+    }
+    if (mov.moneda === 'USD') mov.tc_aplicado = Number($('tc').value.replace(',', '.'));
+
+    // --- UI optimista: primero se ve, después se escribe.
+    var temp = agregarItemProvisorio(mov);
+    limpiarParaElSiguiente();
+    pendientes++;
+    marcarPendientes();
+
+    API.appendMovimientos([mov]).then(function (res) {
+      pendientes--; marcarPendientes();
+      var r = res.resultados && res.resultados[0];
+
+      if (!res.ok) {
+        var msg = (r && r.error) || res.error || 'No se pudo guardar';
+        temp.remove();
+        if (r && r.duplicado) return preguntarDuplicado(mov, msg);
+        return aviso(msg, true, function () { restaurar(mov); });
+      }
+
+      temp.dataset.id = r.id;
+      temp.classList.remove('pendiente');
+      var filas = r.filas ? r.filas.length : 1;
+      aviso('Guardado' + (filas > 1 ? ' (' + filas + ' asientos)' : '') +
+            (r.aviso ? ' · ' + r.aviso : ''), false, function () { deshacer(r.id, temp); }, 'Deshacer');
+    }).catch(function (e) {
+      pendientes--; marcarPendientes();
+      temp.remove();
+      aviso('Error de conexión: ' + e.message, true, function () { restaurar(mov); });
+    });
+  }
+
+  function preguntarDuplicado(mov, msg) {
+    aviso(msg, true, function () {
+      mov.forzar_duplicado = true;
+      var temp = agregarItemProvisorio(mov);
+      API.appendMovimientos([mov]).then(function (res) {
+        var r = res.resultados && res.resultados[0];
+        if (res.ok) { temp.dataset.id = r.id; temp.classList.remove('pendiente'); aviso('Guardado igual'); }
+        else { temp.remove(); aviso((r && r.error) || 'No se pudo', true); }
+      });
+    }, 'Guardar igual');
+  }
+
+  /**
+   * Anular es una acción no repetible: se bloquea en el momento del clic, no
+   * cuando vuelve la respuesta. Entre el clic y la respuesta hay 1-3 segundos, y
+   * ese hueco alcanza para que tres toques impacientes manden tres pedidos.
+   */
+  function deshacer(id, nodo) {
+    if (nodo.dataset.anulando === '1' || nodo.classList.contains('anulado')) return;
+    nodo.dataset.anulando = '1';
+
+    var x = nodo.querySelector('.x');
+    if (x) { x.disabled = true; x.textContent = '…'; }
+
+    API.anularMovimiento(id, 'Deshecho desde la app').then(function (res) {
+      if (res.ok) {
+        nodo.classList.add('anulado');
+        if (x) x.remove();
+        aviso(res.yaEstaba ? 'Ya estaba anulado' : (res.mensaje || 'Anulado'));
+      } else {
+        nodo.dataset.anulando = '';
+        if (x) { x.disabled = false; x.textContent = '×'; }
+        aviso(res.error || 'No se pudo anular', true);
+      }
+    }).catch(function (e) {
+      nodo.dataset.anulando = '';
+      if (x) { x.disabled = false; x.textContent = '×'; }
+      aviso('Error al anular: ' + e.message, true);
+    });
+  }
+
+  /** Devuelve el formulario al estado anterior si la escritura falló. */
+  function restaurar(mov) {
+    $('monto').value = String(mov.monto).replace('.', ',');
+    if (mov.descripcion) { abrirDescripcion(); $('desc').value = mov.descripcion; }
+    revisar();
+    $('monto').focus();
+  }
+
+  /** La descripción arranca plegada: casi nunca se usa y abrir el teclado por
+   *  reflejo obliga a cerrarlo para llegar al botón de guardar. */
+  function plegarDescripcion() {
+    $('desc').value = '';
+    $('desc').hidden = true;
+    $('bDesc').hidden = false;
+  }
+
+  function abrirDescripcion() {
+    $('bDesc').hidden = true;
+    $('desc').hidden = false;
+    $('desc').focus();
+  }
+
+  function limpiarParaElSiguiente() {
+    // La fecha, el tipo, la cuenta y el concepto se conservan: cargar tres
+    // cosas seguidas tiene que ser un gesto por ítem, no un formulario nuevo.
+    $('monto').value = '';
+    plegarDescripcion();
+    revisar();
+    $('monto').focus();
+  }
+
+  function marcarPendientes() {
+    $('guardar').textContent = pendientes
+      ? 'Guardando ' + pendientes + '…'
+      : 'Guardar y seguir';
+  }
+
+  // ================================================================ lista
+
+  function agregarItemProvisorio(mov) {
+    var cont = $('lista');
+    if (cont.querySelector('.nota')) cont.innerHTML = '';
+
+    var t = TIPOS.filter(function (x) { return x.id === mov.tipo; })[0];
+    var el = document.createElement('div');
+    el.className = 'item pendiente ' + t.clase;
+    el.innerHTML =
+      '<div class="txt"><b></b><small></small></div>' +
+      '<div class="imp"></div>' +
+      '<button class="x" title="Deshacer">×</button>';
+    el.querySelector('b').textContent = mov.concepto ||
+      (nombreCuenta(mov.cuenta) + ' → ' + nombreCuenta(mov.cuenta_destino));
+    el.querySelector('small').textContent =
+      [mov.fecha, nombreCuenta(mov.cuenta), mov.descripcion].filter(Boolean).join(' · ');
+    el.querySelector('.imp').textContent = t.signo.replace('$', '') + ' ' + fmt(mov.monto);
+    el.querySelector('.x').onclick = function () {
+      if (el.dataset.id) deshacer(el.dataset.id, el);
+    };
+    cont.insertBefore(el, cont.firstChild);
+    return el;
+  }
+
+  function fmt(n) {
+    return Number(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  // ================================================================ toast
+
+  var toastT = null;
+
+  /**
+   * El aviso vive ARRIBA (ver styles.css): abajo está el botón de guardar y
+   * taparlo es peor que no avisar. Se cierra solo, tocándolo, o con la ×.
+   */
+  function aviso(msg, esError, accion, textoAccion) {
+    clearTimeout(toastT);
+    $('toastMsg').textContent = msg;
+    $('toast').classList.toggle('err', !!esError);
+
+    var b = $('toastAccion');
+    if (accion) {
+      b.hidden = false;
+      b.disabled = false;
+      b.textContent = textoAccion || 'Reintentar';
+      // De un solo uso: se desarma antes de ejecutar, no después.
+      b.onclick = function (ev) {
+        ev.stopPropagation();
+        b.disabled = true;
+        b.onclick = null;
+        ocultarToast();
+        accion();
+      };
+    } else {
+      b.hidden = true;
+      b.onclick = null;
+    }
+
+    $('toast').classList.add('open');
+    toastT = setTimeout(ocultarToast, esError ? 8000 : 4000);
+  }
+
+  function ocultarToast() {
+    clearTimeout(toastT);
+    $('toast').classList.remove('open');
+  }
+
+  // ================================================================ eventos
+
+  function conectar() {
+    $('monto').addEventListener('input', revisar);
+    $('moneda').addEventListener('change', revisar);
+    $('tc').addEventListener('input', revisar);
+
+    $('form').addEventListener('submit', function (e) { e.preventDefault(); guardar(); });
+    $('guardar').addEventListener('click', guardar);
+
+    $('monto').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); guardar(); }
+    });
+
+    $('bConcepto').onclick = function () {
+      if (!cat) return;
+      var items = conceptosDelTipo().map(function (c) {
+        return { label: c.concepto, value: c.concepto };
+      });
+      abrirSheet('Concepto', porUso(items, cat.recientes.conceptos, 'value'), setConcepto);
+    };
+
+    $('bSub').onclick = function () {
+      if (!cat) return;
+      var items = cat.subcategorias.map(function (s) {
+        return { label: s.subcategoria, value: s.subcategoria };
+      });
+      abrirSheet('Subcategoría', items, function (v) {
+        st.subcategoria = v; ponerVal('bSub', v, 'Elegir subcategoría'); revisar();
+      });
+    };
+
+    $('bCuenta').onclick = function () {
+      if (!cat) return;
+      var items = cat.cuentas.map(function (c) {
+        return { label: c.nombre, value: c.id, nota: c.moneda };
+      });
+      abrirSheet('Cuenta', porUso(items, cat.recientes.cuentas, 'value'), setCuenta);
+    };
+
+    $('bDestino').onclick = function () {
+      if (!cat) return;
+      var items = cat.cuentas
+        .filter(function (c) { return c.id !== st.cuenta; })
+        .map(function (c) { return { label: c.nombre, value: c.id, nota: c.moneda }; });
+      abrirSheet('Cuenta destino', items, function (v) {
+        st.destino = v; ponerVal('bDestino', nombreCuenta(v), 'Elegir destino'); revisar();
+      });
+    };
+
+    $('bDesc').onclick = abrirDescripcion;
+    $('guardarSaldos').onclick = guardarSaldos;
+    Array.prototype.forEach.call(document.querySelectorAll('.tab[data-vista]'), function (b) {
+      b.onclick = function () { irA(b.dataset.vista); };
+    });
+    // El link al Dashboard necesita URL ABSOLUTA y target="_top": adentro del
+    // iframe de Apps Script, una ruta relativa se resuelve contra
+    // googleusercontent.com y la pantalla queda en blanco.
+    // BUILD DE DEMO: el tablero no vive en otra URL, se muestra acá adentro
+    // dentro de un iframe. En la app publicada esto es un link con target="_top".
+
+    // Tocar el aviso en cualquier parte lo cierra. Antes sólo se iba solo, y si
+    // uno lo tocaba no pasaba nada: parecía colgado.
+    $('toast').onclick = ocultarToast;
+    $('toastCerrar').onclick = function (ev) { ev.stopPropagation(); ocultarToast(); };
+
+    $('sheetBg').onclick = cerrarSheet;
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') cerrarSheet();
+    });
+
+    // armarSalida() queda fuera del build web: adentro de un iframe
+    // pisaría el historial de la página que lo contiene.
+  }
+
+  // ================================================================ vistas
+
+  var vista = 'reg';
+
+  function irA(v) {
+    vista = v;
+    $('vistaReg').hidden = v !== 'reg';
+    $('vistaSal').hidden = v !== 'sal';
+    $('vistaDash').hidden = v !== 'dash';
+    document.querySelector('.barra').hidden = v === 'dash';
+    if (v === 'dash') {
+      var ifr = $('ifDash');
+      if (!ifr.srcdoc) ifr.srcdoc = window.DASH_HTML;   // se carga recién al entrar
+    }
+    $('guardar').hidden = v !== 'reg';
+    $('guardarSaldos').hidden = v !== 'sal';
+    $('titulo').textContent = v === 'dash' ? 'Tablero'
+      : (v === 'reg' ? 'Registrar movimiento' : 'Saldos y conciliación');
+    Array.prototype.forEach.call(document.querySelectorAll('.tab[data-vista]'), function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.vista === v));
+    });
+    if (v === 'sal') cargarSaldos();
+  }
+
+  // ================================================================ saldos
+
+  var estado = null;
+
+  function cargarSaldos() {
+    $('cuentasSaldos').innerHTML = '<p class="nota">Cargando cuentas…</p>';
+    API.estadoSaldos().then(function (e) {
+      estado = e;
+      if (!$('fechaSaldos').value) $('fechaSaldos').value = e.hoy;
+      pintarCuentas();
+      pintarConciliacion();
+    }).catch(function (err) {
+      $('cuentasSaldos').innerHTML = '';
+      aviso('No pude traer los saldos: ' + err.message, true);
+    });
+  }
+
+  function pintarCuentas() {
+    var cont = $('cuentasSaldos');
+    cont.innerHTML = '';
+    estado.cuentas.forEach(function (c) {
+      var el = document.createElement('div');
+      el.className = 'cta ' + (c.cierra === null ? '' : c.cierra ? 'cierra' : 'nocierra');
+      el.innerHTML =
+        '<div class="nom"><b></b><small></small></div>' +
+        '<input inputmode="decimal" aria-label="Saldo">' +
+        '<span class="est"></span>';
+      el.querySelector('b').textContent = c.nombre;
+      el.querySelector('small').textContent = c.ultimaFecha
+        ? 'último: ' + c.ultimaFecha + ' · ' + fmt(c.ultimoSaldo) + ' ' + c.moneda
+        : 'sin declarar';
+      el.querySelector('.est').textContent = c.cierra === null ? '' : (c.cierra ? '✓' : '✗');
+      var inp = el.querySelector('input');
+      inp.dataset.cuenta = c.id;
+      // Prellenado con el último saldo: la mayoría de los días una o dos cuentas
+      // no se mueven, y así se confirman sin tipear nada.
+      inp.value = c.ultimoSaldo === null ? '' : String(c.ultimoSaldo).replace('.', ',');
+      cont.appendChild(el);
+    });
+  }
+
+  function pintarConciliacion() {
+    var cont = $('resConc');
+    cont.innerHTML = '';
+    var algo = false;
+    estado.cuentas.forEach(function (c) {
+      if (c.cierra === null) return;
+      algo = true;
+      var el = document.createElement('div');
+      el.className = 'conc ' + (c.cierra ? 'cierra' : 'nocierra');
+      var h = '<b>' + (c.cierra ? '✓ ' : '✗ ') + c.nombre + '</b>' +
+              '<div class="fila"><span>Diferencia</span><span>' + fmt(c.diferencia) + '</span></div>';
+      if (!c.cierra && c.tipo === 'fci' && c.rendimientoSugerido) {
+        h += '<div class="fila"><span>Rendimiento sugerido</span><span>' +
+             fmt(c.rendimientoSugerido) + '</span></div>';
+        if (c.tna !== null) {
+          // Coma decimal: el resto de los números de la pantalla usa es-AR y un
+          // punto acá se lee como separador de miles.
+          h += '<div class="fila"><span>TNA implícita</span><span>' +
+               (c.tna * 100).toFixed(1).replace('.', ',') + ' %' +
+               (c.tnaPlausible ? '' : ' ⚠') + '</span></div>';
+        }
+        h += '<button type="button" class="btn sec" style="margin-top:8px" data-rend="' +
+             c.id + '">Registrar como rendimiento</button>';
+        if (!c.tnaPlausible) {
+          h += '<p class="nota warn">Una tasa fuera de rango casi siempre es un ' +
+               'movimiento sin cargar, no un rendimiento. Revisá antes.</p>';
+        }
+      }
+      el.innerHTML = h;
+      var b = el.querySelector('[data-rend]');
+      if (b) b.onclick = function () { registrarRend(c.id, b); };
+      cont.appendChild(el);
+    });
+    if (!algo) cont.innerHTML = '<p class="nota">Hacen falta dos declaraciones para conciliar.</p>';
+  }
+
+  function registrarRend(cuentaId, boton) {
+    boton.disabled = true;
+    boton.textContent = 'Registrando…';
+    API.registrarRendimiento(cuentaId).then(function (r) {
+      if (r.ok) { aviso('Registrado ' + fmt(r.monto) + ' como ' + r.concepto); cargarSaldos(); }
+      else { boton.disabled = false; boton.textContent = 'Registrar como rendimiento';
+             aviso(r.error || 'No se pudo', true); }
+    });
+  }
+
+  function guardarSaldos() {
+    var fecha = $('fechaSaldos').value;
+    if (!fecha) return aviso('Falta la fecha', true);
+
+    var lista = [];
+    Array.prototype.forEach.call($('cuentasSaldos').querySelectorAll('input'), function (i) {
+      var t = i.value.trim().replace(/\./g, '').replace(',', '.');
+      if (t === '') return;
+      var v = Number(t);
+      if (!isFinite(v)) return;
+      lista.push({ fecha: fecha, cuenta: i.dataset.cuenta, saldo_real: v, origen: 'manual' });
+    });
+    if (!lista.length) return aviso('No hay ningún saldo para guardar', true);
+
+    $('guardarSaldos').disabled = true;
+    $('guardarSaldos').textContent = 'Guardando…';
+    API.declararSaldos(lista).then(function (r) {
+      $('guardarSaldos').disabled = false;
+      $('guardarSaldos').textContent = 'Guardar saldos';
+      if (!r.ok) return aviso(r.error || 'No se pudo guardar', true);
+      aviso(lista.length + ' saldo(s) declarado(s)');
+      cargarSaldos();
+    }).catch(function (e) {
+      $('guardarSaldos').disabled = false;
+      $('guardarSaldos').textContent = 'Guardar saldos';
+      aviso('Error: ' + e.message, true);
+    });
+  }
+
+  // ================================================================ salir
+
+  /**
+   * El gesto de atrás cerraba la app de una. Se mete una entrada de historia
+   * propia: el primer "atrás" cierra la hoja inferior si está abierta, o avisa;
+   * recién el segundo sale. Es el patrón de las apps nativas.
+   */
+  function armarSalida() {
+    var armado = false, t = null;
+    history.pushState({ fa: 1 }, '');
+
+    window.addEventListener('popstate', function () {
+      if ($('sheet').classList.contains('open')) {
+        cerrarSheet();
+        history.pushState({ fa: 1 }, '');
+        return;
+      }
+      if (vista !== 'reg') {
+        irA('reg');
+        history.pushState({ fa: 1 }, '');
+        return;
+      }
+      if (armado) { armado = false; history.back(); return; }
+
+      history.pushState({ fa: 1 }, '');
+      armado = true;
+      clearTimeout(t);
+      t = setTimeout(function () { armado = false; }, 3500);
+
+      var hayAlgo = $('monto').value.trim() || pendientes > 0;
+      aviso(hayAlgo
+        ? 'Tenés algo sin terminar. Tocá atrás otra vez para salir.'
+        : 'Tocá atrás otra vez para salir.', !!hayAlgo);
+    });
+  }
+
+})();
+
+</script>
+</body>
+</html>
